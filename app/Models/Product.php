@@ -14,6 +14,11 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
     public function getImageAttribute($value)
     {
         if (empty($value)) {

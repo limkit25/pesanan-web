@@ -8,6 +8,15 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Kelola akun Admin dan Customer sistem FoodieHub.</p>
         </div>
         <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
+            <form action="{{ route('admin.users.index') }}" method="GET" class="flex-1 sm:flex-initial">
+                @if(request('role'))
+                    <input type="hidden" name="role" value="{{ request('role') }}">
+                @endif
+                <div class="relative">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau email..." class="w-full sm:w-56 pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-pink-500 focus:ring focus:ring-pink-200">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+            </form>
             <a href="{{ route('admin.users.create') }}" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-white transition-all duration-300 bg-gradient-to-r from-orange-500 to-pink-500 border border-transparent rounded-xl shadow-md hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                 Tambah Pengguna

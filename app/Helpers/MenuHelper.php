@@ -42,7 +42,12 @@ class MenuHelper
                 'icon' => 'ui-elements',
                 'name' => 'Pengaturan',
                 'path' => '/admin/settings',
-            ]
+            ],
+            [
+                'icon' => 'pages',
+                'name' => 'Laporan',
+                'path' => '/admin/reports',
+            ],
         ];
     }
 
