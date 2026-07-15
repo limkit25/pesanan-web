@@ -24,6 +24,14 @@
                                     <p class="text-rose-500 text-xs mt-1.5 font-semibold">{{ $message }}</p>
                                 @enderror
                             </div>
+                            <div class="mb-4">
+                                <label for="delivery_date" class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Jadwal Pengiriman / Pengambilan (Opsional)</label>
+                                <input type="datetime-local" name="delivery_date" id="delivery_date" min="{{ now()->format('Y-m-d\TH:i') }}" class="mt-1 p-3 block w-full rounded-xl border-gray-200 shadow-inner focus:border-pink-500 focus:ring focus:ring-pink-200/50 text-xs transition-all duration-300 font-semibold text-gray-700">
+                                <p class="text-[10px] text-gray-400 font-medium mt-1">Kosongkan jika ingin segera diproses langsung setelah pesanan dibuat.</p>
+                                @error('delivery_date')
+                                    <p class="text-rose-500 text-xs mt-1.5 font-semibold">{{ $message }}</p>
+                                @enderror
+                            </div>
                             <div class="mt-6">
                                 <button type="submit" class="w-full flex justify-center items-center px-5 py-3 border border-transparent rounded-xl shadow-md text-xs font-bold text-white bg-gradient-to-r from-orange-500 to-pink-500 hover:shadow-lg hover:shadow-orange-200/50 hover:-translate-y-0.5 transition-all duration-355">
                                     Konfirmasi & Buat Pesanan

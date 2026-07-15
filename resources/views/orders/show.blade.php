@@ -138,12 +138,18 @@
                             Detail Waktu
                         </h3>
                         <dl class="space-y-3 text-xs font-semibold">
+                            @if($order->delivery_date)
                             <div class="flex items-center justify-between border-b border-gray-700/50 pb-2.5">
-                                <dt class="text-gray-450">Tanggal Pesan</dt>
+                                <dt class="text-orange-400 font-extrabold">Jadwal Kirim/Ambil</dt>
+                                <dd class="text-white font-extrabold">{{ \Carbon\Carbon::parse($order->delivery_date)->format('d M Y, H:i') }} WIB</dd>
+                            </div>
+                            @endif
+                            <div class="flex items-center justify-between border-b border-gray-700/50 pb-2.5">
+                                <dt class="text-gray-400">Tanggal Pesan</dt>
                                 <dd class="text-white">{{ $order->created_at->format('d M Y') }}</dd>
                             </div>
                             <div class="flex items-center justify-between">
-                                <dt class="text-gray-450">Waktu Transaksi</dt>
+                                <dt class="text-gray-400">Waktu Transaksi</dt>
                                 <dd class="text-white">{{ $order->created_at->format('H:i:s') }} WIB</dd>
                             </div>
                         </dl>

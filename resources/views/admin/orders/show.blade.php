@@ -145,10 +145,22 @@
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
                             <div>
-                                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Waktu</p>
+                                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Waktu Transaksi</p>
                                 <p class="text-xs font-medium text-gray-600 dark:text-gray-300">{{ $order->created_at->format('d M Y, H:i') }}</p>
                             </div>
                         </div>
+
+                        @if($order->delivery_date)
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center flex-shrink-0 animate-pulse">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-orange-500 uppercase tracking-wider">Jadwal Kirim/Ambil</p>
+                                <p class="text-xs font-black text-orange-600 dark:text-orange-400">{{ \Carbon\Carbon::parse($order->delivery_date)->format('d M Y, H:i') }} WIB</p>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
 
