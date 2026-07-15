@@ -74,7 +74,7 @@
                             fill="currentColor"
                         />
                         </svg>',
-                        'path' => '#'
+                        'path' => route('admin.settings.index')
                     ],
                     [
                         'text' => 'Support',
@@ -86,7 +86,7 @@
                             fill="currentColor"
                           />
                         </svg>',
-                        'path' => '#'
+                        'path' => route('home')
                     ],
                 ];
             @endphp
