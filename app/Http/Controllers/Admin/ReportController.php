@@ -82,4 +82,63 @@ class ReportController extends Controller
             'recentOrders', 'startDate', 'endDate'
         ));
     }
+
+    public function export(Request $request)
+    {
+        $startDate = $request->filled('start_date') 
+            ? Carbon::parse($request->start_date)->startOfDay() 
+            : Carbon::now()->startOfMonth();
+        $endDate = $request->filled('end_date') 
+            ? Carbon::parse($request->end_date)->endOfDay() 
+            : Carbon::now()->endOfDay();
+
+        $orders = Order::with(['user', 'orderItems.product'])
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $fileName = 'laporan_penjualan_' . $startDate->format('Ymd') . '_to_' . $endDate->format('Ymd') . '.csv';
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('ID Pesanan', 'Pelanggan', 'Email', 'Total Harga', 'Status', 'Tanggal & Waktu', 'Detail Menu');
+
+        $callback = function() use($orders, $columns) {
+            $file = fopen('php://output', 'w');
+            
+            // Add UTF-8 BOM for Excel compatibility
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+            
+            fputcsv($file, $columns);
+
+            foreach ($orders as $order) {
+                $itemsArray = [];
+                foreach ($order->orderItems as $item) {
+                    $productName = $item->product ? $item->product->name : 'Produk Dihapus';
+                    $itemsArray[] = $productName . ' (x' . $item->quantity . ')';
+                }
+                $itemsString = implode(', ', $itemsArray);
+
+                fputcsv($file, array(
+                    '#' . str_pad($order->id, 5, '0', STR_PAD_LEFT),
+                    $order->user ? $order->user->name : 'Umum',
+                    $order->user ? $order->user->email : '-',
+                    $order->total_price,
+                    strtoupper($order->status),
+                    $order->created_at->format('Y-m-d H:i:s'),
+                    $itemsString
+                ));
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

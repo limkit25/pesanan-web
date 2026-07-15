@@ -1,19 +1,99 @@
 @extends('layouts.admin')
 
 @section('content')
+<style>
+    @media print {
+        /* Sembunyikan navigasi sidebar, header global, form filter, dan tombol ekspor */
+        aside,
+        header,
+        #sidebar,
+        .no-print,
+        .no-print * {
+            display: none !important;
+        }
+
+        /* Atur area utama agar memenuhi kertas */
+        .flex-1,
+        main,
+        .p-4,
+        .sm\:p-6,
+        .lg\:p-8 {
+            margin-left: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        body, html {
+            background: white !important;
+            color: black !important;
+            font-size: 12px !important;
+        }
+
+        /* Tampilkan judul print */
+        .print-header {
+            display: block !important;
+        }
+
+        /* Rapikan kartu stat agar tidak pecah/terpotong */
+        .grid {
+            display: grid !important;
+            gap: 10px !important;
+        }
+        
+        /* Hindari pemotongan tabel di tengah baris */
+        tr {
+            page-break-inside: avoid !important;
+        }
+    }
+    
+    /* Secara default sembunyikan kop surat cetak di layar biasa */
+    .print-header {
+        display: none;
+    }
+</style>
+
+<!-- Kop Cetak Laporan (Hanya Muncul Saat Print/PDF) -->
+<div class="print-header mb-8 border-b-2 border-gray-900 pb-4">
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold uppercase tracking-tight text-gray-900">FoodieHub - Laporan Penjualan</h1>
+            <p class="text-xs text-gray-500 mt-1">Periode: {{ $startDate->format('d M Y') }} s/d {{ $endDate->format('d M Y') }}</p>
+        </div>
+        <div class="text-right">
+            <p class="text-sm font-bold text-gray-900">FoodieHub Management System</p>
+            <p class="text-[10px] text-gray-500 mt-0.5">Dicetak pada: {{ now()->format('d M Y H:i') }}</p>
+        </div>
+    </div>
+</div>
+
 <div class="p-4 sm:p-6 lg:p-8">
     <!-- Header & Date Filter -->
-    <div class="sm:flex sm:items-center sm:justify-between mb-8">
+    <div class="sm:flex sm:items-center sm:justify-between mb-8 no-print">
         <div>
             <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">Laporan Penjualan</h1>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Statistik dan ringkasan performa bisnis Anda.</p>
         </div>
-        <form action="{{ route('admin.reports.index') }}" method="GET" class="mt-4 sm:mt-0 flex flex-wrap items-center gap-2">
-            <input type="date" name="start_date" value="{{ $startDate->format('Y-m-d') }}" class="rounded-lg border border-gray-300 text-sm py-2 px-3 focus:border-pink-500 focus:ring focus:ring-pink-200">
-            <span class="text-gray-400 text-sm font-bold">s/d</span>
-            <input type="date" name="end_date" value="{{ $endDate->format('Y-m-d') }}" class="rounded-lg border border-gray-300 text-sm py-2 px-3 focus:border-pink-500 focus:ring focus:ring-pink-200">
-            <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm font-bold">Filter</button>
-        </form>
+        <div class="mt-4 sm:mt-0 flex flex-wrap items-center gap-3">
+            <form action="{{ route('admin.reports.index') }}" method="GET" class="flex flex-wrap items-center gap-2">
+                <input type="date" name="start_date" value="{{ $startDate->format('Y-m-d') }}" class="rounded-lg border border-gray-300 text-sm py-2 px-3 focus:border-pink-500 focus:ring focus:ring-pink-200">
+                <span class="text-gray-400 text-sm font-bold">s/d</span>
+                <input type="date" name="end_date" value="{{ $endDate->format('Y-m-d') }}" class="rounded-lg border border-gray-300 text-sm py-2 px-3 focus:border-pink-500 focus:ring focus:ring-pink-200">
+                <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm font-bold">Filter</button>
+            </form>
+            
+            <div class="h-8 w-[1px] bg-gray-200 hidden sm:block"></div>
+
+            <a href="{{ route('admin.reports.export', request()->all()) }}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-bold inline-flex items-center gap-1.5 shadow-sm transition-colors duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Ekspor CSV
+            </a>
+            
+            <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-bold inline-flex items-center gap-1.5 shadow-sm transition-colors duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                Cetak PDF
+            </button>
+        </div>
     </div>
 
     <!-- Stats Cards -->

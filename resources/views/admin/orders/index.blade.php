@@ -38,6 +38,7 @@
                         <tr>
                             <th scope="col" class="py-3 pl-5 pr-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">ID</th>
                             <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Pelanggan</th>
+                            <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Jumlah (Qty)</th>
                             <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Total</th>
                             <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Status</th>
                             <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Waktu</th>
@@ -59,6 +60,9 @@
                                         </div>
                                         <span class="font-semibold">{{ $order->user->name }}</span>
                                     </div>
+                                </td>
+                                <td class="whitespace-nowrap px-3 py-3 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                    {{ (int)$order->total_qty }} item
                                 </td>
                                 <td class="whitespace-nowrap px-3 py-3 text-xs font-bold text-gray-900 dark:text-white">
                                     Rp {{ number_format($order->total_price, 0, ',', '.') }}
@@ -98,7 +102,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-5 py-8 text-center text-gray-400 dark:text-gray-500">
+                                <td colspan="7" class="px-5 py-8 text-center text-gray-400 dark:text-gray-500">
                                     <svg class="mx-auto h-8 w-8 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                                     <p class="font-semibold text-xs">Tidak ada pesanan masuk</p>
                                 </td>
