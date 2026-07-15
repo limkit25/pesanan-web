@@ -11,6 +11,9 @@
     <!-- Scripts -->
     @vite(['resources/css/admin.css', 'resources/js/admin.js'])
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Alpine.js -->
     {{-- <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
 
@@ -131,6 +134,72 @@
 
     </div>
 
+    <!-- Global SweetAlert Confirmation Script -->
+    <script>
+        document.addEventListener('submit', function (e) {
+            const form = e.target;
+            
+            // Check if the form is a POST/PUT/PATCH/DELETE request (has CSRF token)
+            const csrfInput = form.querySelector('input[name="_token"]');
+            if (csrfInput) {
+                // If the submission is already confirmed, let it go through
+                if (form.dataset.confirmed) {
+                    return;
+                }
+                
+                // Prevent immediate form submission
+                e.preventDefault();
+                
+                const methodInput = form.querySelector('input[name="_method"]');
+                const isDelete = methodInput && methodInput.value.toUpperCase() === 'DELETE';
+                const isLogout = form.action && form.action.toLowerCase().includes('logout');
+                
+                let title = 'Simpan Perubahan?';
+                let text = 'Apakah Anda yakin ingin menyimpan perubahan ini?';
+                let icon = 'question';
+                let confirmColor = '#f97316'; // orange-500
+                let confirmText = 'Ya, Simpan';
+                
+                if (isDelete) {
+                    title = 'Hapus Data?';
+                    text = 'Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan!';
+                    icon = 'warning';
+                    confirmColor = '#ef4444'; // red-500
+                    confirmText = 'Ya, Hapus';
+                } else if (isLogout) {
+                    title = 'Keluar dari Sistem?';
+                    text = 'Apakah Anda yakin ingin mengakhiri sesi Anda?';
+                    icon = 'question';
+                    confirmColor = '#ef4444'; // red-500
+                    confirmText = 'Ya, Keluar';
+                }
+                
+                const isDark = document.documentElement.classList.contains('dark');
+                
+                Swal.fire({
+                    title: title,
+                    text: text,
+                    icon: icon,
+                    showCancelButton: true,
+                    confirmButtonColor: confirmColor,
+                    cancelButtonColor: '#9ca3af',
+                    confirmButtonText: confirmText,
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true,
+                    background: isDark ? '#1e293b' : '#ffffff',
+                    color: isDark ? '#ffffff' : '#1f2937',
+                    customClass: {
+                        popup: 'rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.dataset.confirmed = 'true';
+                        form.submit();
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 @stack('scripts')

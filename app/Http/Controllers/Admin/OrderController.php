@@ -10,7 +10,7 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Order::with('user')->withSum('orderItems as total_qty', 'quantity');
+        $query = Order::with(['user', 'orderItems.product'])->withSum('orderItems as total_qty', 'quantity');
 
         if ($request->filled('search')) {
             $search = $request->search;

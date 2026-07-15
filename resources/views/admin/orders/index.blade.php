@@ -61,8 +61,11 @@
                                         <span class="font-semibold">{{ $order->user->name }}</span>
                                     </div>
                                 </td>
-                                <td class="whitespace-nowrap px-3 py-3 text-xs font-semibold text-gray-700 dark:text-gray-300">
-                                    {{ (int)$order->total_qty }} item
+                                <td class="px-3 py-3 text-xs">
+                                    <div class="font-bold text-gray-900 dark:text-white">{{ (int)$order->total_qty }} item</div>
+                                    <div class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5 max-w-[180px] truncate" title="{{ $order->orderItems->map(fn($item) => ($item->product ? $item->product->name : 'Produk Dihapus') . ' (x' . $item->quantity . ')')->implode(', ') }}">
+                                        {{ $order->orderItems->map(fn($item) => ($item->product ? $item->product->name : 'Produk Dihapus') . ' (x' . $item->quantity . ')')->implode(', ') }}
+                                    </div>
                                 </td>
                                 <td class="whitespace-nowrap px-3 py-3 text-xs font-bold text-gray-900 dark:text-white">
                                     Rp {{ number_format($order->total_price, 0, ',', '.') }}
