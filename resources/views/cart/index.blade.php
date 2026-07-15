@@ -73,7 +73,7 @@
                                                     <form action="{{ route('cart.update', $cart->id) }}" method="POST" class="inline">
                                                         @csrf
                                                         @method('PATCH')
-                                                        <input type="number" name="quantity" value="{{ $cart->quantity }}" min="1" onchange="this.form.submit()" class="w-10 text-center text-xs font-black text-gray-800 bg-transparent border-0 p-0 focus:ring-0 focus:outline-hidden [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                                        <input type="number" name="quantity" value="{{ $cart->quantity }}" min="1" onchange="this.form.submit()" style="width:40px; text-align:center; font-weight:900; font-size:12px; background:transparent; border:none; outline:none; color:#1f2937; -moz-appearance:textfield;" onkeydown="if(event.key==='Enter'){event.preventDefault();this.form.submit();}">
                                                     </form>
                                                     
                                                     <!-- Tombol Tambah (+) -->

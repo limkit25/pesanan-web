@@ -140,6 +140,29 @@
                             </div>
                         </div>
 
+                        @if($order->phone)
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #ecfdf5; color: #10b981;">
+                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.504-5.714-1.464L0 24zm6.59-4.846c1.6.95 3.197 1.451 4.885 1.453 5.325 0 9.66-4.322 9.663-9.65.002-2.578-1.002-5.003-2.826-6.83-1.825-1.829-4.25-2.836-6.837-2.837-5.328 0-9.663 4.323-9.667 9.651-.001 1.776.471 3.51 1.365 5.011l-.99 3.618 3.73-.977zm11.595-6.666c-.29-.145-1.716-.848-1.982-.945-.266-.096-.459-.145-.652.146-.193.29-.747.945-.916 1.139-.17.193-.338.217-.628.072-2.884-1.439-5.116-3.666-6.554-6.551-.29-.489.29-.454.827-.999.072-.072.145-.145.217-.217.072-.072.096-.12.145-.193.048-.073.024-.145-.012-.217-.036-.073-.314-.761-.43-1.039-.113-.274-.249-.237-.34-.241l-.29-.004c-.193 0-.507.072-.772.361-.266.29-1.014.992-1.014 2.417 0 1.425 1.038 2.802 1.182 2.996.145.193 2.043 3.12 4.95 4.378.692.299 1.233.478 1.654.612.695.221 1.328.19 1.828.115.556-.083 1.716-.701 1.958-1.378.24-.677.24-1.258.17-1.378-.07-.12-.266-.193-.556-.339z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Telepon / WhatsApp</p>
+                                @php
+                                    $cleanPhoneAdmin = preg_replace('/[^0-9]/', '', $order->phone);
+                                    if (strpos($cleanPhoneAdmin, '0') === 0) {
+                                        $cleanPhoneAdmin = '62' . substr($cleanPhoneAdmin, 1);
+                                    }
+                                @endphp
+                                <a href="https://wa.me/{{ $cleanPhoneAdmin }}" target="_blank" rel="noopener noreferrer" class="text-xs font-bold hover:underline flex items-center gap-1" style="color: #059669;">
+                                    {{ $order->phone }}
+                                    <svg class="w-3 h-3 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </a>
+                            </div>
+                        </div>
+                        @endif
+
                         <div class="flex items-center gap-2.5">
                             <div class="w-7 h-7 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>

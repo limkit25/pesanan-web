@@ -121,14 +121,37 @@
                     </div>
 
                     <!-- Info Pengiriman / Catatan -->
-                    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-                        <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-1.5">
-                            <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                            Alamat / Catatan Meja
-                        </h3>
-                        <div class="bg-gray-50 rounded-xl p-3 border border-gray-100">
-                            <p class="text-xs text-gray-700 whitespace-pre-wrap leading-relaxed font-semibold">{{ $order->shipping_address }}</p>
+                    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm space-y-3">
+                        <div>
+                            <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                Alamat / Catatan Meja
+                            </h3>
+                            <div class="bg-gray-50 rounded-xl p-3 border border-gray-100">
+                                <p class="text-xs text-gray-700 whitespace-pre-wrap leading-relaxed font-semibold">{{ $order->shipping_address }}</p>
+                            </div>
                         </div>
+
+                        @if($order->phone)
+                        <div>
+                            <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-emerald-500 fill-current" viewBox="0 0 24 24">
+                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.504-5.714-1.464L0 24zm6.59-4.846c1.6.95 3.197 1.451 4.885 1.453 5.325 0 9.66-4.322 9.663-9.65.002-2.578-1.002-5.003-2.826-6.83-1.825-1.829-4.25-2.836-6.837-2.837-5.328 0-9.663 4.323-9.667 9.651-.001 1.776.471 3.51 1.365 5.011l-.99 3.618 3.73-.977zm11.595-6.666c-.29-.145-1.716-.848-1.982-.945-.266-.096-.459-.145-.652.146-.193.29-.747.945-.916 1.139-.17.193-.338.217-.628.072-2.884-1.439-5.116-3.666-6.554-6.551-.29-.489.29-.454.827-.999.072-.072.145-.145.217-.217.072-.072.096-.12.145-.193.048-.073.024-.145-.012-.217-.036-.073-.314-.761-.43-1.039-.113-.274-.249-.237-.34-.241l-.29-.004c-.193 0-.507.072-.772.361-.266.29-1.014.992-1.014 2.417 0 1.425 1.038 2.802 1.182 2.996.145.193 2.043 3.12 4.95 4.378.692.299 1.233.478 1.654.612.695.221 1.328.19 1.828.115.556-.083 1.716-.701 1.958-1.378.24-.677.24-1.258.17-1.378-.07-.12-.266-.193-.556-.339z"/>
+                                </svg>
+                                Nomor Kontak
+                            </h3>
+                            <div class="bg-gray-50 rounded-xl p-3 border border-gray-100 flex items-center justify-between">
+                                <span class="text-xs text-gray-700 font-extrabold">{{ $order->phone }}</span>
+                                @php
+                                    $cleanPhone = preg_replace('/[^0-9]/', '', $order->phone);
+                                    if (strpos($cleanPhone, '0') === 0) {
+                                        $cleanPhone = '62' . substr($cleanPhone, 1);
+                                    }
+                                @endphp
+                                <a href="https://wa.me/{{ $cleanPhone }}" target="_blank" rel="noopener noreferrer" class="text-[10px] font-extrabold text-white px-3 py-1.5 rounded-lg transition-all duration-300" style="background-color: #10b981;">Hubungi WhatsApp</a>
+                            </div>
+                        </div>
+                        @endif
                     </div>
 
                     <!-- Info Waktu -->

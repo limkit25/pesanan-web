@@ -25,6 +25,13 @@
                                 @enderror
                             </div>
                             <div class="mb-4">
+                                <label for="phone" class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Nomor Telepon / WhatsApp yang Bisa Dihubungi</label>
+                                <input type="text" name="phone" id="phone" value="{{ old('phone') }}" class="mt-1 p-3 block w-full rounded-xl border-gray-200 shadow-inner focus:border-pink-500 focus:ring focus:ring-pink-200/50 text-xs transition-all duration-300 font-semibold text-gray-700" required placeholder="Contoh: 081234567890">
+                                @error('phone')
+                                    <p class="text-rose-500 text-xs mt-1.5 font-semibold">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="mb-4">
                                 <label for="delivery_date" class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Jadwal Pengiriman / Pengambilan (Opsional)</label>
                                 <input type="datetime-local" name="delivery_date" id="delivery_date" min="{{ now()->format('Y-m-d\TH:i') }}" class="mt-1 p-3 block w-full rounded-xl border-gray-200 shadow-inner focus:border-pink-500 focus:ring focus:ring-pink-200/50 text-xs transition-all duration-300 font-semibold text-gray-700">
                                 <p class="text-[10px] text-gray-400 font-medium mt-1">Kosongkan jika ingin segera diproses langsung setelah pesanan dibuat.</p>

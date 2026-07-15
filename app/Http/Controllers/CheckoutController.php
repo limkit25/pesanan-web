@@ -27,6 +27,7 @@ class CheckoutController extends Controller
     {
         $request->validate([
             'shipping_address' => 'required|string|max:500',
+            'phone' => 'required|string|max:30',
             'delivery_date' => 'nullable|date',
         ]);
 
@@ -54,6 +55,7 @@ class CheckoutController extends Controller
                 'total_price' => $total,
                 'status' => 'pending',
                 'shipping_address' => $request->shipping_address,
+                'phone' => $request->phone,
                 'delivery_date' => $request->delivery_date,
             ]);
 
