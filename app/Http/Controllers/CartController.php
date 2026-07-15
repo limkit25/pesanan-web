@@ -20,17 +20,20 @@ class CartController extends Controller
 
     public function add(Request $request, Product $product)
     {
+        $qty = $request->input('quantity', 1);
+        $qty = max(1, (int)$qty);
+
         $cart = Cart::where('user_id', Auth::id())
                     ->where('product_id', $product->id)
                     ->first();
 
         if ($cart) {
-            $cart->increment('quantity');
+            $cart->increment('quantity', $qty);
         } else {
             Cart::create([
                 'user_id' => Auth::id(),
                 'product_id' => $product->id,
-                'quantity' => 1
+                'quantity' => $qty
             ]);
         }
 

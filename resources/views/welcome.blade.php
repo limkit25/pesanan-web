@@ -185,10 +185,16 @@
                                 <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Harga</span>
                                 <span class="text-2xl font-extrabold text-gray-900">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
                             </div>
-                            <form action="{{ route('cart.add', $product->id) }}" method="POST" class="add-to-cart-form">
+                            <form action="{{ route('cart.add', $product->id) }}" method="POST" class="add-to-cart-form flex items-center gap-2">
                                 @csrf
-                                <button type="submit" class="w-12 h-12 rounded-full bg-gray-900 text-white flex items-center justify-center group-hover:bg-gradient-to-r group-hover:from-orange-500 group-hover:to-pink-500 transition-all duration-300 shadow-md hover:shadow-xl transform hover:-translate-y-1" title="Tambah ke Keranjang">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                <!-- Qty Selector -->
+                                <div class="flex items-center border border-gray-200 rounded-2xl overflow-hidden bg-gray-50 shadow-inner h-10">
+                                    <button type="button" onclick="let input = this.parentNode.querySelector('input'); if(input.value > 1) input.value--;" class="px-3 text-gray-500 hover:bg-gray-200 transition-colors font-bold text-sm h-full select-none">-</button>
+                                    <input type="number" name="quantity" value="1" min="1" class="w-8 text-center text-xs font-black text-gray-800 bg-transparent border-0 p-0 focus:ring-0 focus:outline-hidden [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none h-full">
+                                    <button type="button" onclick="let input = this.parentNode.querySelector('input'); input.value++;" class="px-3 text-gray-500 hover:bg-gray-200 transition-colors font-bold text-sm h-full select-none">+</button>
+                                </div>
+                                <button type="submit" class="w-10 h-10 rounded-2xl bg-gray-900 text-white flex items-center justify-center hover:bg-gradient-to-r hover:from-orange-500 hover:to-pink-500 transition-all duration-300 shadow-md hover:shadow-lg transform active:scale-95" title="Tambah ke Keranjang">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                 </button>
                             </form>
                         </div>
@@ -244,6 +250,9 @@
                 
                 submitBtn.disabled = true;
                 
+                const qtyInput = this.querySelector('input[name="quantity"]');
+                const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+                
                 fetch(this.action, {
                     method: 'POST',
                     headers: {
@@ -251,7 +260,7 @@
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': this.querySelector('input[name="_token"]').value
                     },
-                    body: JSON.stringify({})
+                    body: JSON.stringify({ quantity: quantity })
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -262,6 +271,7 @@
                 .then(data => {
                     if(data.success && img && cartIcon) {
                         flyToCart(img, cartIcon);
+                        if (qtyInput) qtyInput.value = 1;
                         
                         setTimeout(() => {
                             const badge = document.getElementById('cart-badge');

@@ -69,8 +69,12 @@
                                                         <button type="submit" class="px-3 py-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition-colors font-bold text-sm" {{ $cart->quantity <= 1 ? 'disabled class=opacity-30' : '' }}>-</button>
                                                     </form>
                                                     
-                                                    <!-- Angka Qty -->
-                                                    <span class="w-8 inline-block text-center text-xs font-black text-gray-800">{{ $cart->quantity }}</span>
+                                                    <!-- Angka Qty (Bisa Diketik) -->
+                                                    <form action="{{ route('cart.update', $cart->id) }}" method="POST" class="inline">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <input type="number" name="quantity" value="{{ $cart->quantity }}" min="1" onchange="this.form.submit()" class="w-10 text-center text-xs font-black text-gray-800 bg-transparent border-0 p-0 focus:ring-0 focus:outline-hidden [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                                    </form>
                                                     
                                                     <!-- Tombol Tambah (+) -->
                                                     <form action="{{ route('cart.update', $cart->id) }}" method="POST" class="inline">
