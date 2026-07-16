@@ -34,7 +34,26 @@
                     </label>
                 </div>
             </div>
-
+            <div class="mb-8">
+                <h2 class="text-lg font-bold text-gray-900 mb-4 border-b border-gray-50 pb-2">Pengaturan Pembayaran Transfer</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div>
+                        <label class="font-bold text-gray-800 text-sm block mb-1">Nama Bank</label>
+                        <input type="text" name="bank_name" value="{{ $bankNameSetting->value }}" class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200/50 text-sm" placeholder="Contoh: BCA">
+                        @error('bank_name') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="font-bold text-gray-800 text-sm block mb-1">Nomor Rekening</label>
+                        <input type="text" name="bank_account" value="{{ $bankAccountSetting->value }}" class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200/50 text-sm" placeholder="Contoh: 1234567890">
+                        @error('bank_account') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="font-bold text-gray-800 text-sm block mb-1">Atas Nama (Pemilik Rekening)</label>
+                        <input type="text" name="bank_owner" value="{{ $bankOwnerSetting->value }}" class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200/50 text-sm" placeholder="Contoh: FoodieHub Official">
+                        @error('bank_owner') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+            </div>
             <div class="flex justify-end pt-4 border-t border-gray-50">
                 <button type="submit" class="px-6 py-2.5 bg-gray-900 text-white text-sm font-bold rounded-xl shadow-md hover:bg-gray-800 hover:-translate-y-0.5 transition-all duration-300">
                     Simpan Pengaturan

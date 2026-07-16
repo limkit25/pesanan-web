@@ -19,8 +19,12 @@ class CheckoutController extends Controller
         }
         $taxSetting = \App\Models\Setting::where('key', 'tax_enabled')->first();
         $taxEnabled = $taxSetting ? $taxSetting->value == '1' : true;
+
+        $bankName = \App\Models\Setting::where('key', 'bank_name')->first()->value ?? 'BCA';
+        $bankAccount = \App\Models\Setting::where('key', 'bank_account')->first()->value ?? '123456789';
+        $bankOwner = \App\Models\Setting::where('key', 'bank_owner')->first()->value ?? 'FoodieHub Official';
         
-        return view('checkout.index', compact('carts', 'taxEnabled'));
+        return view('checkout.index', compact('carts', 'taxEnabled', 'bankName', 'bankAccount', 'bankOwner'));
     }
 
     public function store(Request $request)
@@ -29,6 +33,7 @@ class CheckoutController extends Controller
             'shipping_address' => 'required|string|max:500',
             'phone' => 'required|string|max:30',
             'delivery_date' => 'nullable|date|after_or_equal:today',
+            'payment_method' => 'required|in:cash,transfer',
         ]);
 
         $carts = Cart::with('product')->where('user_id', Auth::id())->get();
@@ -60,6 +65,7 @@ class CheckoutController extends Controller
                 'shipping_address' => $request->shipping_address,
                 'phone' => $request->phone,
                 'delivery_date' => $request->delivery_date,
+                'payment_method' => $request->payment_method,
             ]);
 
             foreach ($carts as $cart) {

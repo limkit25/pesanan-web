@@ -210,6 +210,33 @@
 
                 <!-- Payment Summary -->
                 @if(auth()->user()->role === 'admin')
+                <div class="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm dark:border-gray-800 dark:bg-gray-dark mb-5">
+                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        Info Pembayaran
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-gray-500">Metode</span>
+                            <span class="text-xs font-bold text-gray-900 dark:text-white uppercase">{{ $order->payment_method === 'transfer' ? 'Transfer Bank' : 'Cash (COD)' }}</span>
+                        </div>
+                        @if($order->payment_method === 'transfer')
+                            <div class="border-t border-gray-100 pt-3 mt-3">
+                                <span class="text-[10px] font-bold text-gray-400 block mb-2">Bukti Transfer</span>
+                                @if($order->payment_proof)
+                                    <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="block overflow-hidden rounded-lg border border-gray-200">
+                                        <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Transfer" class="w-full h-32 object-cover hover:scale-105 transition-transform duration-300">
+                                    </a>
+                                @else
+                                    <div class="bg-orange-50 text-orange-600 rounded-lg p-3 text-center text-xs font-bold">
+                                        Belum Ada Bukti
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
                 <div class="rounded-xl border border-gray-200 bg-gray-50/50 px-5 py-4 shadow-sm dark:border-gray-800 dark:bg-gray-900/40">
                     <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Ringkasan Bayar</h3>
                     <dl class="space-y-2.5">

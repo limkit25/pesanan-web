@@ -4,21 +4,93 @@
             <h2 class="font-extrabold text-2xl text-gray-900 tracking-tight">
                 Detail Pesanan #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}
             </h2>
-            <a href="{{ route('orders.index') }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-gray-100 text-xs font-bold rounded-xl text-gray-600 hover:text-orange-500 shadow-sm hover:shadow-md transition-all duration-300">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
-                Kembali ke Daftar Pesanan
-            </a>
+            <div class="flex items-center gap-2">
+                <button onclick="window.print()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-gray-900 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-gray-800 transition-all duration-300 no-print">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    Cetak Invoice
+                </button>
+                <a href="{{ route('orders.index') }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-gray-100 text-xs font-bold rounded-xl text-gray-600 hover:text-orange-500 shadow-sm hover:shadow-md transition-all duration-300 no-print">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    Kembali
+                </a>
+            </div>
         </div>
     </x-slot>
 
+    <style>
+        @media print {
+            header, nav, footer, .no-print, .min-h-screen > header {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .min-h-screen {
+                background: white !important;
+            }
+            main {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .bg-white, .bg-gray-50, .bg-gradient-to-r, .bg-gradient-to-tr {
+                background: white !important;
+                border: none !important;
+                box-shadow: none !important;
+                color: black !important;
+            }
+            .text-white, .text-gray-400, .text-gray-900, .text-orange-500, .text-orange-400, .text-orange-650 {
+                color: black !important;
+                -webkit-text-fill-color: black !important;
+            }
+            .border-gray-100, .border-gray-700\/50, .border-gray-200, .divide-gray-50 > :not([hidden]) ~ :not([hidden]) {
+                border-color: #000 !important;
+                border-width: 1px !important;
+            }
+            .shadow-sm, .shadow-md {
+                box-shadow: none !important;
+            }
+            .rounded-2xl, .rounded-xl {
+                border-radius: 0 !important;
+            }
+            .print-header {
+                display: block !important;
+                border-bottom: 2px solid black;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+            }
+            .print-flex-col {
+                display: flex !important;
+                flex-direction: column !important;
+            }
+        }
+        .print-header {
+            display: none;
+        }
+    </style>
+
     <div class="py-6">
         <div class="max-w-5xl mx-auto px-4 sm:px-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <!-- Kop Invoice Print -->
+            <div class="print-header">
+                <div class="flex justify-between items-end">
+                    <div>
+                        <h1 class="text-2xl font-bold uppercase tracking-tight">INVOICE PESANAN</h1>
+                        <p class="text-sm mt-1">Order ID: #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-lg">FoodieHub</p>
+                        <p class="text-xs mt-1">{{ \Carbon\Carbon::parse($order->created_at)->format('d M Y, H:i') }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 print-flex-col">
 
                 <!-- Detail Item Pesanan -->
                 <div class="lg:col-span-2 space-y-5">
                     <!-- Status Tracker -->
-                    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm no-print">
                         <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-5 flex items-center gap-2">
                             <span class="w-1.5 h-4 bg-gradient-to-b from-orange-500 to-pink-500 rounded-full inline-block"></span>
                             Status Pesanan
@@ -120,6 +192,53 @@
                         </dl>
                     </div>
 
+                    <!-- Detail Metode Pembayaran & Upload Struk -->
+                    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm space-y-4 no-print">
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                            Metode Pembayaran
+                        </h3>
+                        
+                        <div class="bg-gray-50 rounded-xl p-3 border border-gray-100">
+                            <p class="text-xs font-bold text-gray-900">
+                                {{ $order->payment_method === 'transfer' ? 'Transfer Bank' : 'Bayar di Tempat (Cash)' }}
+                            </p>
+                            @if($order->payment_method === 'transfer')
+                                <p class="text-[10px] text-gray-500 mt-1">Ke Rekening {{ $bankName }}: {{ $bankAccount }} a.n. {{ $bankOwner }}</p>
+                            @endif
+                        </div>
+
+                        @if($order->payment_method === 'transfer')
+                            @if($order->payment_proof)
+                                <div class="mt-3">
+                                    <p class="text-[10px] font-bold text-emerald-600 mb-2 flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        Bukti Transfer Terkirim
+                                    </p>
+                                    <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="block overflow-hidden rounded-xl border border-gray-200">
+                                        <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Transfer" class="w-full h-32 object-cover hover:scale-105 transition-transform duration-300">
+                                    </a>
+                                </div>
+                            @elseif($order->status === 'pending')
+                                <div class="mt-3 border-t border-gray-100 pt-3">
+                                    <form action="{{ route('orders.upload_payment', $order) }}" method="POST" enctype="multipart/form-data" class="space-y-3">
+                                        @csrf
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Upload Struk Transfer (JPG/PNG)</label>
+                                            <input type="file" name="payment_proof" accept="image/*" required class="block w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100 border border-gray-200 rounded-xl bg-white cursor-pointer">
+                                            @error('payment_proof')
+                                                <p class="text-rose-500 text-[10px] mt-1">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <button type="submit" class="w-full py-2 bg-gray-900 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-gray-800 transition-colors">
+                                            Kirim Bukti Pembayaran
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
+                        @endif
+                    </div>
+
                     <!-- Info Pengiriman / Catatan -->
                     <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm space-y-3">
                         <div>
@@ -127,8 +246,8 @@
                                 <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                 Alamat / Catatan Meja
                             </h3>
-                            <div class="bg-gray-50 rounded-xl p-3 border border-gray-100">
-                                <p class="text-xs text-gray-700 whitespace-pre-wrap leading-relaxed font-semibold">{{ $order->shipping_address }}</p>
+                            <div class="bg-gray-50 rounded-xl p-3 border border-gray-100 print:border-black print:p-0">
+                                <p class="text-xs text-gray-700 print:text-black whitespace-pre-wrap leading-relaxed font-semibold">{{ $order->shipping_address }}</p>
                             </div>
                         </div>
 
@@ -148,7 +267,7 @@
                                         $cleanPhone = '62' . substr($cleanPhone, 1);
                                     }
                                 @endphp
-                                <a href="https://wa.me/{{ $cleanPhone }}" target="_blank" rel="noopener noreferrer" class="text-[10px] font-extrabold text-white px-3 py-1.5 rounded-lg transition-all duration-300" style="background-color: #10b981;">Hubungi WhatsApp</a>
+                                <a href="https://wa.me/{{ $cleanPhone }}" target="_blank" rel="noopener noreferrer" class="text-[10px] font-extrabold text-white px-3 py-1.5 rounded-lg transition-all duration-300 no-print" style="background-color: #10b981;">Hubungi WhatsApp</a>
                             </div>
                         </div>
                         @endif
@@ -177,6 +296,19 @@
                             </div>
                         </dl>
                     </div>
+                    
+                    @if($order->status === 'pending')
+                    <div class="pt-5 mt-5 border-t border-gray-200 dark:border-gray-700/50 no-print">
+                        <form action="{{ route('orders.cancel', $order) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini? Aksi ini tidak dapat dikembalikan.');">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center justify-center gap-2 py-3 px-4 border border-rose-200 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold hover:bg-rose-100 hover:border-rose-300 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                Batalkan Pesanan
+                            </button>
+                            <p class="text-center text-[10px] text-gray-400 mt-2">Pesanan hanya dapat dibatalkan jika belum diproses oleh dapur.</p>
+                        </form>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

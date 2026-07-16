@@ -68,6 +68,8 @@ Route::middleware('auth')->group(function () {
     // Customer Order History
     Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/payment-proof', [\App\Http\Controllers\OrderController::class, 'uploadPaymentProof'])->name('orders.upload_payment');
+    Route::post('/orders/{order}/cancel', [\App\Http\Controllers\OrderController::class, 'cancel'])->name('orders.cancel');
 });
 
 Route::get('auth/google', [\App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])->name('auth.google');

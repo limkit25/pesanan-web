@@ -15,7 +15,7 @@
                             <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             Informasi Pengiriman / Nomor Meja
                         </h3>
-                        <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form">
+                        <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form" x-data="{ payment_method: 'cash' }">
                             @csrf
                             <div class="mb-4">
                                 <label for="shipping_address" class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Alamat Pengiriman (atau Nomor Meja / Catatan Tambahan)</label>
@@ -38,6 +38,45 @@
                                 @error('delivery_date')
                                     <p class="text-rose-500 text-xs mt-1.5 font-semibold">{{ $message }}</p>
                                 @enderror
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Metode Pembayaran</label>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
+                                    <label class="relative flex items-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition-colors" :class="payment_method === 'cash' ? 'border-orange-500 bg-orange-50/30' : 'border-gray-200'">
+                                        <input type="radio" name="payment_method" value="cash" x-model="payment_method" class="w-4 h-4 text-orange-500 border-gray-300 focus:ring-orange-500 focus:ring-2">
+                                        <div class="ml-3">
+                                            <span class="block text-xs font-bold text-gray-900">Bayar di Tempat (Cash)</span>
+                                        </div>
+                                    </label>
+                                    <label class="relative flex items-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition-colors" :class="payment_method === 'transfer' ? 'border-orange-500 bg-orange-50/30' : 'border-gray-200'">
+                                        <input type="radio" name="payment_method" value="transfer" x-model="payment_method" class="w-4 h-4 text-orange-500 border-gray-300 focus:ring-orange-500 focus:ring-2">
+                                        <div class="ml-3">
+                                            <span class="block text-xs font-bold text-gray-900">Transfer Bank</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                @error('payment_method')
+                                    <p class="text-rose-500 text-xs mt-1.5 font-semibold">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div x-show="payment_method === 'transfer'" x-collapse class="mb-4">
+                                <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+                                    <h4 class="text-xs font-bold text-blue-800 mb-2">Instruksi Pembayaran Transfer:</h4>
+                                    <p class="text-xs text-blue-700 mb-2">Silakan transfer sesuai total tagihan ke rekening berikut:</p>
+                                    <div class="bg-white rounded-lg p-3 border border-blue-100 flex justify-between items-center">
+                                        <div>
+                                            <p class="text-[10px] font-bold text-gray-500 uppercase">Bank {{ $bankName }}</p>
+                                            <p class="text-sm font-black text-gray-900">{{ $bankAccount }}</p>
+                                            <p class="text-[10px] font-bold text-gray-500 mt-0.5">a.n {{ $bankOwner }}</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-[10px] text-blue-600 font-semibold mt-3 flex items-start gap-1">
+                                        <svg class="w-3.5 h-3.5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        Setelah pesanan dibuat, Anda bisa mengunggah (upload) bukti transfer di halaman Riwayat Pesanan.
+                                    </p>
+                                </div>
                             </div>
                             <div class="mt-6">
                                 <button type="submit" class="w-full flex justify-center items-center px-5 py-3 border border-transparent rounded-xl shadow-md text-xs font-bold text-white bg-gradient-to-r from-orange-500 to-pink-500 hover:shadow-lg hover:shadow-orange-200/50 hover:-translate-y-0.5 transition-all duration-355">
