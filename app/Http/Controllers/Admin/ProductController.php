@@ -42,6 +42,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'cost_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ]);
@@ -57,8 +58,10 @@ class ProductController extends Controller
             'slug' => Str::slug($request->name),
             'description' => $request->description,
             'price' => $request->price,
+            'cost_price' => $request->cost_price ?? 0,
             'stock' => $request->stock,
             'image' => $imagePath,
+            'is_active' => $request->has('is_active'),
         ]);
 
         return redirect()->route('admin.products.index')->with('success', 'Produk berhasil ditambahkan');
@@ -77,6 +80,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'cost_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ]);
@@ -87,7 +91,9 @@ class ProductController extends Controller
             'slug' => Str::slug($request->name),
             'description' => $request->description,
             'price' => $request->price,
+            'cost_price' => $request->cost_price ?? 0,
             'stock' => $request->stock,
+            'is_active' => $request->has('is_active'),
         ];
 
         if ($request->hasFile('image')) {

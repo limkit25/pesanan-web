@@ -34,25 +34,40 @@
                                 <tr class="bg-gray-50 border-b">
                                     <th class="p-4 font-semibold text-sm">Gambar</th>
                                     <th class="p-4 font-semibold text-sm">Nama Produk</th>
+                                    <th class="p-4 font-semibold text-sm">Status</th>
                                     <th class="p-4 font-semibold text-sm">Kategori</th>
-                                    <th class="p-4 font-semibold text-sm">Harga</th>
+                                    <th class="p-4 font-semibold text-sm">Harga Jual</th>
+                                    <th class="p-4 font-semibold text-sm text-gray-500">Harga Modal</th>
                                     <th class="p-4 font-semibold text-sm">Stok</th>
                                     <th class="p-4 font-semibold text-sm">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($products as $product)
-                                <tr class="border-b hover:bg-gray-50">
+                                <tr class="border-b hover:bg-gray-50 {{ $product->is_active ? '' : 'opacity-60 bg-gray-50/50' }}">
                                     <td class="p-4">
                                         @if($product->image)
-                                            <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-12 h-12 object-cover rounded-md">
+                                            <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-12 h-12 object-cover rounded-md {{ $product->is_active ? '' : 'grayscale' }}">
                                         @else
                                             <div class="w-12 h-12 bg-gray-200 rounded-md"></div>
                                         @endif
                                     </td>
-                                    <td class="p-4 font-medium">{{ $product->name }}</td>
+                                    <td class="p-4 font-medium">
+                                        {{ $product->name }}
+                                        @if(!$product->is_active)
+                                            <span class="block text-[10px] text-gray-400 font-normal mt-0.5">(Disembunyikan dari Menu)</span>
+                                        @endif
+                                    </td>
+                                    <td class="p-4">
+                                        @if($product->is_active)
+                                            <span class="px-2.5 py-1 text-[10px] font-bold bg-emerald-100 text-emerald-700 rounded-lg">Aktif</span>
+                                        @else
+                                            <span class="px-2.5 py-1 text-[10px] font-bold bg-gray-200 text-gray-600 rounded-lg">Nonaktif</span>
+                                        @endif
+                                    </td>
                                     <td class="p-4">{{ $product->category->name ?? '-' }}</td>
-                                    <td class="p-4">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
+                                    <td class="p-4 font-bold text-gray-900">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
+                                    <td class="p-4 text-gray-500 font-medium">Rp {{ number_format($product->cost_price, 0, ',', '.') }}</td>
                                     <td class="p-4">{{ $product->stock }}</td>
                                     <td class="p-4">
                                         <div class="flex gap-2">
@@ -67,7 +82,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="6" class="p-8 text-center text-gray-400">
+                                    <td colspan="8" class="p-8 text-center text-gray-400">
                                         <p class="font-semibold text-sm">{{ request('search') ? 'Tidak ada produk yang cocok dengan pencarian.' : 'Belum ada produk.' }}</p>
                                     </td>
                                 </tr>

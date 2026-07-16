@@ -14,6 +14,7 @@ class HomeController extends Controller
         $categoryId = $request->query('category');
         
         $products = Product::with('category')
+            ->where('is_active', true)
             ->when($categoryId, function ($query) use ($categoryId) {
                 return $query->where('category_id', $categoryId);
             })

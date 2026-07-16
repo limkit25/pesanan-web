@@ -23,9 +23,17 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Harga Modal (Rp)</label>
+                                <input type="number" name="cost_price" class="w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring focus:ring-pink-200" placeholder="0">
+                                <p class="text-[10px] text-gray-400 mt-1">Untuk hitung keuntungan (tidak tampil di pelanggan).</p>
+                            </div>
                             
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Harga (Rp)</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Harga Jual (Rp)</label>
                                 <input type="number" name="price" class="w-full rounded-md border-gray-300 shadow-sm focus:border-pink-500 focus:ring focus:ring-pink-200" required>
                             </div>
                             
@@ -43,6 +51,17 @@
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Upload Gambar Produk</label>
                             <input type="file" name="image" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 border border-gray-300 rounded-md p-1 focus:outline-none">
+                        </div>
+
+                        <div class="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-between">
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-900">Status Produk</h4>
+                                <p class="text-xs text-gray-500 mt-1">Aktifkan agar produk ini muncul di halaman pemesanan pelanggan.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="is_active" value="1" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                            </label>
                         </div>
 
                         <div class="flex justify-end gap-2">

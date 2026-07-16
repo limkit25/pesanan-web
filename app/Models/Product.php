@@ -7,7 +7,13 @@ use Illuminate\Support\Str;
 
 class Product extends Model
 {
-    protected $fillable = ['category_id', 'name', 'slug', 'description', 'price', 'stock', 'image'];
+    protected $fillable = ['category_id', 'name', 'slug', 'description', 'price', 'cost_price', 'stock', 'image', 'is_active'];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'price' => 'decimal:2',
+        'cost_price' => 'decimal:2',
+    ];
 
     public function category()
     {
