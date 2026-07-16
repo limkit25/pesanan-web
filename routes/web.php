@@ -22,7 +22,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         $totalProducts = \App\Models\Product::count();
         $totalCategories = \App\Models\Category::count();
         $pendingOrders = \App\Models\Order::where('status', 'pending')->count();
-        return view('admin.dashboard', compact('totalOrders', 'totalProducts', 'totalCategories', 'pendingOrders'));
+        
+        // H-3 Upcoming Deliveries
+        $upcomingDeliveriesCount = \App\Models\Order::whereIn('status', ['pending', 'processing'])
+            ->whereNotNull('delivery_date')
+            ->whereBetween('delivery_date', [
+                \Carbon\Carbon::now()->startOfDay(), 
+                \Carbon\Carbon::now()->addDays(3)->endOfDay()
+            ])
+            ->count();
+            
+        return view('admin.dashboard', compact('totalOrders', 'totalProducts', 'totalCategories', 'pendingOrders', 'upcomingDeliveriesCount'));
     })->name('dashboard');
 
     Route::resource('categories', CategoryController::class);

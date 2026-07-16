@@ -18,6 +18,25 @@
         </div>
     </div>
 
+    <!-- H-3 Upcoming Deliveries Notification -->
+    @if(isset($upcomingDeliveriesCount) && $upcomingDeliveriesCount > 0)
+    <div class="bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl p-5 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4 text-white">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 animate-pulse">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div>
+                <h3 class="font-extrabold text-lg">Perhatian: Ada {{ $upcomingDeliveriesCount }} Pesanan Mendekati Jadwal!</h3>
+                <p class="text-sm font-medium text-white/90">Pesanan ini harus disiapkan untuk dikirim atau diambil dalam 3 hari ke depan.</p>
+            </div>
+        </div>
+        <a href="{{ route('admin.reports.delivery') }}" class="px-5 py-2.5 bg-white text-orange-600 font-bold rounded-xl shadow-sm hover:shadow-md hover:bg-orange-50 transition-all duration-300 whitespace-nowrap text-sm flex items-center gap-2">
+            Lihat Rekap Dapur
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </a>
+    </div>
+    @endif
+
     <!-- Quick Stats Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <!-- Stat Card 1 -->

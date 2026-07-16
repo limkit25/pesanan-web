@@ -89,6 +89,50 @@
         </div>
     </div>
 
+    <!-- H-3 Upcoming Deliveries Section -->
+    @if(isset($upcomingOrders) && $upcomingOrders->count() > 0)
+    <div class="mb-10 no-print">
+        <div class="bg-gradient-to-r from-orange-500 to-pink-500 rounded-2xl p-5 sm:p-6 shadow-lg text-white">
+            <h3 class="text-lg font-extrabold flex items-center gap-2 mb-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Jadwal Kirim/Ambil Mendatang (H-3)
+            </h3>
+            <p class="text-sm font-medium text-white/90 mb-5">Terdapat {{ $upcomingOrders->count() }} pesanan yang dijadwalkan dalam 3 hari ke depan.</p>
+            
+            <div class="bg-white/10 rounded-xl overflow-hidden border border-white/20">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-white/10 font-bold uppercase tracking-wider text-[10px] text-white">
+                            <tr>
+                                <th class="px-4 py-3">ID Pesanan</th>
+                                <th class="px-4 py-3">Jadwal (WIB)</th>
+                                <th class="px-4 py-3">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/10 font-medium">
+                            @foreach($upcomingOrders as $order)
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <a href="{{ route('admin.orders.show', $order->id) }}" class="font-bold underline hover:text-orange-200">
+                                        #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}
+                                    </a>
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($order->delivery_date)->format('d M Y, H:i') }}</td>
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-white/20 rounded text-[10px] font-bold uppercase tracking-wider">
+                                        {{ $order->status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Section 1: Rekap Kebutuhan Dapur (Grouped Qty) -->
     <div class="mb-8">
         <h3 class="text-sm font-extrabold text-gray-900 dark:text-white mb-4 flex items-center gap-2">

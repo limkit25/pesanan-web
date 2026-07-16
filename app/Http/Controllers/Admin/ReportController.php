@@ -168,7 +168,18 @@ class ReportController extends Controller
             ->whereBetween('delivery_date', [$startDateTime, $endDateTime])
             ->orderBy('delivery_date', 'asc')
             ->get();
+            
+        // Pesanan H-3 (Tiga hari ke depan dari hari ini)
+        $upcomingStart = Carbon::now()->startOfDay();
+        $upcomingEnd = Carbon::now()->addDays(3)->endOfDay();
+        
+        $upcomingOrders = Order::with(['user', 'orderItems.product'])
+            ->whereIn('status', ['pending', 'processing'])
+            ->whereNotNull('delivery_date')
+            ->whereBetween('delivery_date', [$upcomingStart, $upcomingEnd])
+            ->orderBy('delivery_date', 'asc')
+            ->get();
 
-        return view('admin.reports.delivery', compact('recap', 'orders', 'date'));
+        return view('admin.reports.delivery', compact('recap', 'orders', 'date', 'upcomingOrders'));
     }
 }
