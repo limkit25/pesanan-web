@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class Product extends Model
 {
-    protected $guarded = [];
+    protected $fillable = ['category_id', 'name', 'slug', 'description', 'price', 'stock', 'image'];
 
     public function category()
     {

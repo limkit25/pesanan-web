@@ -28,7 +28,7 @@ class CheckoutController extends Controller
         $request->validate([
             'shipping_address' => 'required|string|max:500',
             'phone' => 'required|string|max:30',
-            'delivery_date' => 'nullable|date',
+            'delivery_date' => 'nullable|date|after_or_equal:today',
         ]);
 
         $carts = Cart::with('product')->where('user_id', Auth::id())->get();
@@ -40,6 +40,9 @@ class CheckoutController extends Controller
         try {
             $total = 0;
             foreach ($carts as $cart) {
+                if ($cart->product->stock < $cart->quantity) {
+                    throw new \Exception('Stok produk ' . $cart->product->name . ' tidak mencukupi.');
+                }
                 $total += ($cart->product->price * $cart->quantity);
             }
             $taxSetting = \App\Models\Setting::where('key', 'tax_enabled')->first();
@@ -66,6 +69,9 @@ class CheckoutController extends Controller
                     'quantity' => $cart->quantity,
                     'price' => $cart->product->price,
                 ]);
+                
+                // Kurangi stok produk
+                $cart->product->decrement('stock', $cart->quantity);
             }
 
             // Empty cart
@@ -76,7 +82,8 @@ class CheckoutController extends Controller
             return redirect()->route('home')->with('success', 'Pesanan berhasil dibuat! Kami akan segera memprosesnya.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan saat memproses pesanan.');
+            $errorMsg = str_contains($e->getMessage(), 'Stok produk') ? $e->getMessage() : 'Terjadi kesalahan saat memproses pesanan.';
+            return back()->with('error', $errorMsg);
         }
     }
 }

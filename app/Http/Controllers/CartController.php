@@ -27,6 +27,17 @@ class CartController extends Controller
                     ->where('product_id', $product->id)
                     ->first();
 
+        $newQty = $cart ? $cart->quantity + $qty : $qty;
+        if ($newQty > $product->stock) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Stok tidak mencukupi. Tersisa ' . $product->stock . ' item.'
+                ], 400);
+            }
+            return back()->with('error', 'Stok tidak mencukupi. Tersisa ' . $product->stock . ' item.');
+        }
+
         if ($cart) {
             $cart->increment('quantity', $qty);
         } else {
@@ -56,6 +67,11 @@ class CartController extends Controller
         }
 
         $request->validate(['quantity' => 'required|integer|min:1']);
+        
+        if ($request->quantity > $cart->product->stock) {
+            return redirect()->back()->with('error', 'Stok tidak mencukupi. Tersisa ' . $cart->product->stock . ' item.');
+        }
+        
         $cart->update(['quantity' => $request->quantity]);
 
         return redirect()->back()->with('success', 'Keranjang diperbarui!');

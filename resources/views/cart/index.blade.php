@@ -1,4 +1,17 @@
 <x-app-layout>
+    <style>
+        /* Hide spin-button for Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Hide spin-button for Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
     <x-slot name="header">
         <h2 class="font-extrabold text-2xl text-gray-900 tracking-tight">
             {{ __('Keranjang Belanja') }}
@@ -73,7 +86,7 @@
                                                     <form action="{{ route('cart.update', $cart->id) }}" method="POST" class="inline">
                                                         @csrf
                                                         @method('PATCH')
-                                                        <input type="number" name="quantity" value="{{ $cart->quantity }}" min="1" onchange="this.form.submit()" style="width:40px; text-align:center; font-weight:900; font-size:12px; background:transparent; border:none; outline:none; color:#1f2937; -moz-appearance:textfield;" onkeydown="if(event.key==='Enter'){event.preventDefault();this.form.submit();}">
+                                                         <input type="number" name="quantity" value="{{ $cart->quantity }}" min="1" onchange="this.form.submit()" class="text-gray-950 dark:text-white p-0 m-0 border-0 focus:ring-0 text-center" style="width: 36px; font-weight: 900; font-size: 14px; background: transparent;" onkeydown="if(event.key==='Enter'){event.preventDefault();this.form.submit();}">
                                                     </form>
                                                     
                                                     <!-- Tombol Tambah (+) -->

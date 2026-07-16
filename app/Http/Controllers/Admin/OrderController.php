@@ -80,6 +80,17 @@ class OrderController extends Controller
 
         \Illuminate\Support\Facades\DB::beginTransaction();
         try {
+            $oldStatus = $order->status;
+            
+            // Refund stok lama jika status lama bukan cancelled
+            if ($oldStatus !== 'cancelled') {
+                foreach ($order->orderItems as $oldItem) {
+                    if ($oldItem->product) {
+                        $oldItem->product->increment('stock', $oldItem->quantity);
+                    }
+                }
+            }
+
             // Update order details
             $order->update([
                 'status' => $request->status,
@@ -105,6 +116,11 @@ class OrderController extends Controller
                         'quantity' => $qty,
                         'price' => $price,
                     ]);
+                    
+                    // Potong stok baru jika status pesanan bukan cancelled
+                    if ($request->status !== 'cancelled') {
+                        $product->decrement('stock', $qty);
+                    }
                 }
             }
 
@@ -121,7 +137,8 @@ class OrderController extends Controller
             return redirect()->route('admin.orders.show', $order->id)->with('success', 'Detail pesanan berhasil diperbarui!');
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\DB::rollBack();
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan perubahan: ' . $e->getMessage())->withInput();
+            \Illuminate\Support\Facades\Log::error('Order update failed: ' . $e->getMessage(), ['order_id' => $order->id]);
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan perubahan. Silakan coba lagi.')->withInput();
         }
     }
 

@@ -232,6 +232,12 @@
                                     class="bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-bold text-gray-800 shadow-sm">
                                     {{ $product->category->name }}
                                 </span>
+                                @if($product->stock <= 0)
+                                <span
+                                    class="bg-rose-500/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-bold text-white shadow-sm ml-2">
+                                    Habis
+                                </span>
+                                @endif
                             </div>
                             <div
                                 class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -265,22 +271,23 @@
                                     class="add-to-cart-form flex items-center gap-2">
                                     @csrf
                                     <!-- Qty Selector -->
-                                    <div class="flex items-center border border-gray-200 rounded-2xl overflow-hidden bg-gray-50 shadow-inner"
+                                    <div class="flex items-center border border-gray-200 rounded-2xl overflow-hidden bg-gray-50 shadow-inner {{ $product->stock <= 0 ? 'opacity-50 pointer-events-none' : '' }}"
                                         style="height:40px;">
                                         <button type="button"
                                             onclick="let input = this.parentNode.querySelector('input'); if(input.value > 1) input.value--;"
                                             class="text-gray-500 hover:bg-gray-200 transition-colors font-bold select-none"
-                                            style="padding:0 12px; font-size:14px; height:100%;">-</button>
-                                        <input type="number" name="quantity" value="1" min="1"
-                                            style="width:32px; text-align:center; font-weight:900; font-size:13px; background:transparent; border:none; outline:none; color:#1f2937; -moz-appearance:textfield; padding:0;">
+                                            style="padding:0 12px; font-size:14px; height:100%;" {{ $product->stock <= 0 ? 'disabled' : '' }}>-</button>
+                                        <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock > 0 ? $product->stock : 1 }}"
+                                            style="width:32px; text-align:center; font-weight:900; font-size:13px; background:transparent; border:none; outline:none; color:#1f2937; -moz-appearance:textfield; padding:0;" {{ $product->stock <= 0 ? 'disabled' : '' }}>
                                         <button type="button"
-                                            onclick="let input = this.parentNode.querySelector('input'); input.value++;"
+                                            onclick="let input = this.parentNode.querySelector('input'); if(input.value < {{ $product->stock > 0 ? $product->stock : 1 }}) input.value++;"
                                             class="text-gray-500 hover:bg-gray-200 transition-colors font-bold select-none"
-                                            style="padding:0 12px; font-size:14px; height:100%;">+</button>
+                                            style="padding:0 12px; font-size:14px; height:100%;" {{ $product->stock <= 0 ? 'disabled' : '' }}>+</button>
                                     </div>
                                     <button type="submit"
-                                        class="w-10 h-10 rounded-2xl bg-gray-900 text-white flex items-center justify-center hover:bg-gradient-to-r hover:from-orange-500 hover:to-pink-500 transition-all duration-300 shadow-md hover:shadow-lg transform active:scale-95"
-                                        title="Tambah ke Keranjang">
+                                        class="w-10 h-10 rounded-2xl {{ $product->stock <= 0 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gray-900 text-white hover:bg-gradient-to-r hover:from-orange-500 hover:to-pink-500 hover:shadow-lg transform active:scale-95' }} flex items-center justify-center transition-all duration-300 shadow-md"
+                                        title="{{ $product->stock <= 0 ? 'Stok Habis' : 'Tambah ke Keranjang' }}"
+                                        {{ $product->stock <= 0 ? 'disabled' : '' }}>
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                                 d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -364,7 +371,11 @@
                 })
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error('Network response was not ok');
+                            return response.json().then(errData => {
+                                throw new Error(errData.message || 'Gagal menambahkan ke keranjang');
+                            }).catch(e => {
+                                throw new Error(e.message || 'Terjadi kesalahan jaringan');
+                            });
                         }
                         return response.json();
                     })
@@ -391,6 +402,7 @@
                     })
                     .catch(err => {
                         console.error(err);
+                        alert(err.message);
                         submitBtn.disabled = false;
                     });
             });

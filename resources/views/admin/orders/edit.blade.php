@@ -116,8 +116,8 @@
                                         <tr class="hover:bg-gray-50/30 dark:hover:bg-white/[0.01] transition-colors">
                                             <td class="whitespace-nowrap py-3 pl-5 pr-3 text-xs font-bold text-gray-900 dark:text-white">
                                                 <div class="flex items-center gap-2.5">
-                                                    <div class="h-9 w-9 flex-shrink-0 overflow-hidden rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-50">
-                                                        <img :src="item.image" :alt="item.name" class="h-full w-full object-cover">
+                                                    <div class="flex-shrink-0 overflow-hidden rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-50" style="width: 48px; height: 48px;">
+                                                        <img :src="item.image" :alt="item.name" style="width: 100%; height: 100%; object-fit: cover;">
                                                     </div>
                                                     <div>
                                                         <span class="font-bold text-gray-900 dark:text-white" x-text="item.name"></span>

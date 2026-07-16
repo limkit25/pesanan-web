@@ -28,7 +28,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
-    Route::get('/orders/check-new', [\App\Http\Controllers\Admin\OrderController::class, 'checkNewOrders'])->name('orders.check');
+    Route::get('/orders/check-new', [\App\Http\Controllers\Admin\OrderController::class, 'checkNewOrders'])->middleware('throttle:30,1')->name('orders.check');
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'edit', 'update']);
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{product}', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
     Route::patch('/cart/update/{cart}', [\App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
-    Route::match(['get', 'post', 'delete'], '/cart/remove/{cart}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+    Route::delete('/cart/remove/{cart}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
 
     // Checkout Routes
     Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
