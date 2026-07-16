@@ -78,7 +78,18 @@ class OrderController extends Controller
         $request->validate($rules);
 
         if (!$isFullEdit) {
+            $oldStatus = $order->status;
             $order->update(['status' => $request->status]);
+
+            if ($oldStatus !== $request->status) {
+                \App\Models\OrderLog::create([
+                    'order_id' => $order->id,
+                    'user_id' => auth()->id(),
+                    'status_from' => $oldStatus,
+                    'status_to' => $request->status,
+                ]);
+            }
+
             return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui!');
         }
 
@@ -136,6 +147,15 @@ class OrderController extends Controller
             }
 
             $order->update(['total_price' => $total]);
+
+            if ($oldStatus !== $request->status) {
+                \App\Models\OrderLog::create([
+                    'order_id' => $order->id,
+                    'user_id' => auth()->id(),
+                    'status_from' => $oldStatus,
+                    'status_to' => $request->status,
+                ]);
+            }
 
             \Illuminate\Support\Facades\DB::commit();
             return redirect()->route('admin.orders.show', $order->id)->with('success', 'Detail pesanan berhasil diperbarui!');

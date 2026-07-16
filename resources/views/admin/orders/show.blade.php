@@ -262,6 +262,50 @@
                     </dl>
                 </div>
                 @endif
+                
+                <!-- Audit Trail (Log Aktivitas) -->
+                <div class="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm dark:border-gray-800 dark:bg-gray-dark">
+                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Log Aktivitas Pesanan
+                    </h3>
+                    <div class="space-y-4 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-200 before:to-transparent">
+                        
+                        <!-- Log Order Created -->
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div class="flex items-center justify-center w-5 h-5 rounded-full border border-white bg-gray-200 text-gray-500 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow">
+                                <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                            </div>
+                            <div class="w-[calc(100%-2.5rem)] md:w-[calc(50%-1.5rem)] p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 shadow-sm border border-gray-100 dark:border-gray-700/50">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-[10px] font-bold text-gray-500">Pesanan Dibuat</span>
+                                    <span class="text-[9px] font-medium text-gray-400">{{ $order->created_at->format('d M, H:i') }}</span>
+                                </div>
+                                <p class="text-[10px] text-gray-600 dark:text-gray-400">
+                                    Oleh Pelanggan: <span class="font-bold">{{ $order->user->name }}</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Logs from database -->
+                        @foreach($order->logs->reverse() as $log)
+                        <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div class="flex items-center justify-center w-5 h-5 rounded-full border border-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow {{ $log->status_to === 'completed' ? 'bg-emerald-100 text-emerald-500' : ($log->status_to === 'cancelled' ? 'bg-rose-100 text-rose-500' : 'bg-orange-100 text-orange-500') }}">
+                                <div class="w-2 h-2 rounded-full {{ $log->status_to === 'completed' ? 'bg-emerald-500' : ($log->status_to === 'cancelled' ? 'bg-rose-500' : 'bg-orange-500') }}"></div>
+                            </div>
+                            <div class="w-[calc(100%-2.5rem)] md:w-[calc(50%-1.5rem)] p-3 rounded-xl bg-white dark:bg-gray-900 shadow-sm border {{ $log->status_to === 'completed' ? 'border-emerald-100' : ($log->status_to === 'cancelled' ? 'border-rose-100' : 'border-orange-100') }}">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-[10px] font-bold {{ $log->status_to === 'completed' ? 'text-emerald-600' : ($log->status_to === 'cancelled' ? 'text-rose-600' : 'text-orange-600') }}">Status: {{ ucfirst($log->status_to) }}</span>
+                                    <span class="text-[9px] font-medium text-gray-400">{{ $log->created_at->format('d M, H:i') }}</span>
+                                </div>
+                                <p class="text-[10px] text-gray-600 dark:text-gray-400">
+                                    Diubah oleh: <span class="font-bold">{{ $log->user ? $log->user->name : 'Sistem' }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         </div>
     </div>

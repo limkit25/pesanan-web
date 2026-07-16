@@ -52,4 +52,9 @@ class User extends Authenticatable
             'google_refresh_token' => 'encrypted',
         ];
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

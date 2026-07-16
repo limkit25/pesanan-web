@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{order}/payment-proof', [\App\Http\Controllers\OrderController::class, 'uploadPaymentProof'])->name('orders.upload_payment');
     Route::post('/orders/{order}/cancel', [\App\Http\Controllers\OrderController::class, 'cancel'])->name('orders.cancel');
+    Route::post('/orders/{order}/review/{product}', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
 });
 
 Route::get('auth/google', [\App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])->name('auth.google');

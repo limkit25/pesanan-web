@@ -11,10 +11,24 @@
                 </button>
                 <a href="{{ route('orders.index') }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-gray-100 text-xs font-bold rounded-xl text-gray-600 hover:text-orange-500 shadow-sm hover:shadow-md transition-all duration-300 no-print">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
                     Kembali
                 </a>
             </div>
         </div>
+        
+        @if(session('success'))
+            <div class="mt-4 bg-emerald-50 border border-emerald-100 text-emerald-700 px-4 py-3 rounded-xl flex items-center gap-2 shadow-sm text-sm font-bold">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="mt-4 bg-rose-50 border border-rose-100 text-rose-700 px-4 py-3 rounded-xl flex items-center gap-2 shadow-sm text-sm font-bold">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                {{ session('error') }}
+            </div>
+        @endif
     </x-slot>
 
     <style>
@@ -156,6 +170,53 @@
                                         <span class="text-[10px] font-semibold text-gray-400 bg-gray-50 px-2 py-0.5 rounded border border-gray-100">Rp {{ number_format($item->price, 0, ',', '.') }}</span>
                                         <span class="text-[10px] font-bold text-orange-650 bg-orange-50/70 px-2 py-0.5 rounded">× {{ $item->quantity }}</span>
                                     </div>
+                                    
+                                    @if($order->status === 'completed')
+                                        @php
+                                            $existingReview = \App\Models\Review::where('order_id', $order->id)->where('product_id', $item->product_id)->first();
+                                        @endphp
+                                        <div class="mt-3 no-print" x-data="{ showReviewForm: false }">
+                                            @if($existingReview)
+                                                <div class="bg-yellow-50/50 rounded-lg p-3 border border-yellow-100/50">
+                                                    <div class="flex items-center gap-1 mb-1">
+                                                        @for($i = 1; $i <= 5; $i++)
+                                                            <svg class="w-3.5 h-3.5 {{ $i <= $existingReview->rating ? 'text-yellow-400' : 'text-gray-300' }}" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                                        @endfor
+                                                    </div>
+                                                    @if($existingReview->comment)
+                                                        <p class="text-[10px] text-gray-600 font-medium italic">"{{ $existingReview->comment }}"</p>
+                                                    @endif
+                                                </div>
+                                            @else
+                                                <button @click="showReviewForm = !showReviewForm" type="button" class="inline-flex items-center gap-1 text-[10px] font-bold text-orange-500 hover:text-orange-600 transition-colors">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                                                    Beri Ulasan
+                                                </button>
+                                                <div x-show="showReviewForm" x-collapse class="mt-3">
+                                                    <form action="{{ route('reviews.store', ['order' => $order->id, 'product' => $item->product_id]) }}" method="POST" class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                                                        @csrf
+                                                        <div class="mb-3" x-data="{ rating: 0, hoverRating: 0 }">
+                                                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Pilih Rating</label>
+                                                            <div class="flex items-center gap-1 cursor-pointer">
+                                                                <input type="hidden" name="rating" x-model="rating" required>
+                                                                @for($i = 1; $i <= 5; $i++)
+                                                                    <svg @mouseover="hoverRating = {{ $i }}" @mouseleave="hoverRating = 0" @click="rating = {{ $i }}" class="w-6 h-6 transition-colors" :class="(hoverRating >= {{ $i }} || rating >= {{ $i }}) ? 'text-yellow-400' : 'text-gray-300'" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                                                @endfor
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Komentar (Opsional)</label>
+                                                            <textarea name="comment" rows="2" class="block w-full text-xs rounded-lg border-gray-200 focus:border-orange-500 focus:ring focus:ring-orange-200/50" placeholder="Bagaimana rasa dan pelayanannya?"></textarea>
+                                                        </div>
+                                                        <div class="flex justify-end gap-2">
+                                                            <button @click="showReviewForm = false" type="button" class="px-3 py-1.5 bg-gray-200 text-gray-700 text-[10px] font-bold rounded-lg hover:bg-gray-300">Batal</button>
+                                                            <button type="submit" class="px-3 py-1.5 bg-orange-500 text-white text-[10px] font-bold rounded-lg hover:bg-orange-600">Kirim Ulasan</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </div>
                             </li>
                             @endforeach

@@ -22,4 +22,14 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function logs()
+    {
+        return $this->hasMany(OrderLog::class)->orderBy('created_at', 'desc');
+    }
 }

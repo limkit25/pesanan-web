@@ -65,6 +65,13 @@ class OrderController extends Controller
         \Illuminate\Support\Facades\DB::beginTransaction();
         try {
             $order->update(['status' => 'cancelled']);
+            
+            \App\Models\OrderLog::create([
+                'order_id' => $order->id,
+                'user_id' => Auth::id(),
+                'status_from' => 'pending',
+                'status_to' => 'cancelled',
+            ]);
 
             // Refund stock
             foreach ($order->orderItems as $item) {
