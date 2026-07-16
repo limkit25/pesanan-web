@@ -141,4 +141,34 @@ class ReportController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+
+    public function deliveryRecap(Request $request)
+    {
+        // Default filter: hari ini
+        $date = $request->filled('date') 
+            ? Carbon::parse($request->date)->format('Y-m-d') 
+            : Carbon::today()->format('Y-m-d');
+
+        $startDateTime = Carbon::parse($date)->startOfDay();
+        $endDateTime = Carbon::parse($date)->endOfDay();
+
+        // Rekap Qty berdasarkan masing-masing menu
+        $recap = \App\Models\OrderItem::with('product')
+            ->whereHas('order', function ($query) use ($startDateTime, $endDateTime) {
+                $query->where('status', '!=', 'cancelled')
+                      ->whereBetween('delivery_date', [$startDateTime, $endDateTime]);
+            })
+            ->selectRaw('product_id, SUM(quantity) as total_qty')
+            ->groupBy('product_id')
+            ->get();
+
+        // List detail pesanan terjadwal hari ini
+        $orders = Order::with(['user', 'orderItems.product'])
+            ->where('status', '!=', 'cancelled')
+            ->whereBetween('delivery_date', [$startDateTime, $endDateTime])
+            ->orderBy('delivery_date', 'asc')
+            ->get();
+
+        return view('admin.reports.delivery', compact('recap', 'orders', 'date'));
+    }
 }

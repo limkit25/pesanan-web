@@ -46,7 +46,16 @@ class MenuHelper
             [
                 'icon' => 'pages',
                 'name' => 'Laporan',
-                'path' => '/admin/reports',
+                'subItems' => [
+                    [
+                        'name' => 'Laporan Penjualan',
+                        'path' => '/admin/reports',
+                    ],
+                    [
+                        'name' => 'Rekap Kirim/Ambil',
+                        'path' => '/admin/reports/delivery',
+                    ],
+                ]
             ],
         ];
     }

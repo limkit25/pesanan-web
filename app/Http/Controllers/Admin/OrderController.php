@@ -36,15 +36,93 @@ class OrderController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
+    public function edit(Order $order)
+    {
+        $order->load(['user', 'orderItems.product']);
+        $products = \App\Models\Product::orderBy('name')->get();
+        
+        $orderItemsJson = $order->orderItems->map(function($item) {
+            return [
+                'product_id' => $item->product_id,
+                'name' => $item->product ? $item->product->name : 'Produk Dihapus',
+                'image' => $item->product ? $item->product->image : '',
+                'price' => (float)$item->price,
+                'quantity' => (int)$item->quantity
+            ];
+        })->toArray();
+
+        return view('admin.orders.edit', compact('order', 'products', 'orderItemsJson'));
+    }
+
     public function update(Request $request, Order $order)
     {
-        $request->validate([
+        $rules = [
             'status' => 'required|in:pending,processing,completed,cancelled'
-        ]);
+        ];
 
-        $order->update(['status' => $request->status]);
+        $isFullEdit = $request->has('phone') || $request->has('shipping_address') || $request->has('items');
 
-        return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui!');
+        if ($isFullEdit) {
+            $rules['phone'] = 'required|string|max:30';
+            $rules['shipping_address'] = 'required|string|max:500';
+            $rules['delivery_date'] = 'nullable|date';
+            $rules['items'] = 'required|array|min:1';
+            $rules['items.*.product_id'] = 'required|exists:products,id';
+            $rules['items.*.quantity'] = 'required|integer|min:1';
+        }
+
+        $request->validate($rules);
+
+        if (!$isFullEdit) {
+            $order->update(['status' => $request->status]);
+            return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui!');
+        }
+
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            // Update order details
+            $order->update([
+                'status' => $request->status,
+                'phone' => $request->phone,
+                'shipping_address' => $request->shipping_address,
+                'delivery_date' => $request->delivery_date,
+            ]);
+
+            // Delete old items
+            $order->orderItems()->delete();
+
+            $total = 0;
+            foreach ($request->items as $itemData) {
+                $product = \App\Models\Product::find($itemData['product_id']);
+                if ($product) {
+                    $qty = intval($itemData['quantity']);
+                    $price = $product->price;
+                    $total += ($price * $qty);
+
+                    \App\Models\OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $product->id,
+                        'quantity' => $qty,
+                        'price' => $price,
+                    ]);
+                }
+            }
+
+            // Apply 10% tax if enabled
+            $taxSetting = \App\Models\Setting::where('key', 'tax_enabled')->first();
+            $taxEnabled = $taxSetting ? $taxSetting->value == '1' : true;
+            if ($taxEnabled) {
+                $total = $total + ($total * 0.1);
+            }
+
+            $order->update(['total_price' => $total]);
+
+            \Illuminate\Support\Facades\DB::commit();
+            return redirect()->route('admin.orders.show', $order->id)->with('success', 'Detail pesanan berhasil diperbarui!');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan perubahan: ' . $e->getMessage())->withInput();
+        }
     }
 
     public function checkNewOrders(Request $request)
