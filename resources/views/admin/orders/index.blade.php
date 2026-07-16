@@ -32,7 +32,7 @@
         @endif
 
         <div class="flow-root">
-            <div class="overflow-hidden bg-white shadow-theme-sm border border-gray-200 rounded-xl dark:bg-gray-dark dark:border-gray-800">
+            <div class="overflow-x-auto bg-white shadow-theme-sm border border-gray-200 rounded-xl dark:bg-gray-dark dark:border-gray-800">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
                     <thead class="bg-gray-50 dark:bg-gray-900/50">
                         <tr>

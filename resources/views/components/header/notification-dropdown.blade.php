@@ -12,7 +12,7 @@
         setInterval(() => this.checkNew(), 10000); // Cek setiap 10 detik
     },
     checkNew() {
-        fetch('{{ route('admin.orders.check') }}')
+        fetch('{{ route('admin.orders.check', [], false) }}')
             .then(res => res.json())
             .then(data => {
                 this.pendingCount = data.pendingCount;
@@ -52,7 +52,7 @@
         this.dropdownOpen = false;
     },
     fetchNotifications() {
-        fetch('{{ route('admin.orders.check') }}?include_recent=1')
+        fetch('{{ route('admin.orders.check', [], false) }}?include_recent=1')
             .then(res => res.json())
             .then(data => {
                 // Filter out notifications that are already in readOrders
