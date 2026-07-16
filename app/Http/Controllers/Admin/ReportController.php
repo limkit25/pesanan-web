@@ -22,9 +22,27 @@ class ReportController extends Controller
             : Carbon::now()->endOfDay();
 
         // Statistik Utama
-        $totalRevenue = Order::where('status', 'completed')
+        $completedOrdersList = Order::with('orderItems')
+            ->where('status', 'completed')
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->sum('total_price');
+            ->get();
+
+        $totalRevenue = $completedOrdersList->sum('total_price');
+        
+        $totalCost = $completedOrdersList->sum(function($order) {
+            return $order->orderItems->sum(function($item) {
+                // Gunakan cost_price yang tersimpan, jika 0 atau null, fallback ke product->cost_price atau 0
+                $cost = $item->cost_price;
+                if (!$cost || $cost == 0) {
+                    $cost = $item->product ? $item->product->cost_price : 0;
+                }
+                return $cost * $item->quantity;
+            });
+        });
+
+        // Hitung total pajak untuk dikurangkan dari revenue agar profit kotor murni (Opsional, tergantung aturan bisnis, anggap total_price sudah termasuk tax jika ada)
+        // Profit = Revenue - Modal
+        $totalProfit = $totalRevenue - $totalCost;
 
         $totalOrders = Order::whereBetween('created_at', [$startDate, $endDate])->count();
 
@@ -77,7 +95,7 @@ class ReportController extends Controller
             ->get();
 
         return view('admin.reports.index', compact(
-            'totalRevenue', 'totalOrders', 'completedOrders', 'cancelledOrders',
+            'totalRevenue', 'totalCost', 'totalProfit', 'totalOrders', 'completedOrders', 'cancelledOrders',
             'pendingOrders', 'newCustomers', 'topProducts', 'dailyRevenue',
             'recentOrders', 'startDate', 'endDate'
         ));
@@ -107,7 +125,7 @@ class ReportController extends Controller
             "Expires"             => "0"
         );
 
-        $columns = array('ID Pesanan', 'Pelanggan', 'Email', 'Total Harga', 'Status', 'Tanggal & Waktu', 'Detail Menu');
+        $columns = array('ID Pesanan', 'Pelanggan', 'Email', 'Total Harga', 'Total Modal', 'Laba (Profit)', 'Status', 'Tanggal & Waktu', 'Detail Menu');
 
         $callback = function() use($orders, $columns) {
             $file = fopen('php://output', 'w');
@@ -118,18 +136,29 @@ class ReportController extends Controller
             fputcsv($file, $columns);
 
             foreach ($orders as $order) {
+                $orderCost = 0;
                 $itemsArray = [];
                 foreach ($order->orderItems as $item) {
                     $productName = $item->product ? $item->product->name : 'Produk Dihapus';
                     $itemsArray[] = $productName . ' (x' . $item->quantity . ')';
+                    
+                    $cost = $item->cost_price;
+                    if (!$cost || $cost == 0) {
+                        $cost = $item->product ? $item->product->cost_price : 0;
+                    }
+                    $orderCost += ($cost * $item->quantity);
                 }
                 $itemsString = implode(', ', $itemsArray);
+                
+                $orderProfit = $order->total_price - $orderCost;
 
                 fputcsv($file, array(
                     '#' . str_pad($order->id, 5, '0', STR_PAD_LEFT),
                     $order->user ? $order->user->name : 'Umum',
                     $order->user ? $order->user->email : '-',
                     $order->total_price,
+                    $orderCost,
+                    $orderProfit,
                     strtoupper($order->status),
                     $order->created_at->format('Y-m-d H:i:s'),
                     $itemsString

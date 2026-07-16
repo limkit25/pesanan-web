@@ -130,6 +130,7 @@ class OrderController extends Controller
                         'product_id' => $product->id,
                         'quantity' => $qty,
                         'price' => $price,
+                        'cost_price' => $product->cost_price ?? 0,
                     ]);
                     
                     // Potong stok baru jika status pesanan bukan cancelled

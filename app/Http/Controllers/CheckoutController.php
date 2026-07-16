@@ -74,6 +74,7 @@ class CheckoutController extends Controller
                     'product_id' => $cart->product_id,
                     'quantity' => $cart->quantity,
                     'price' => $cart->product->price,
+                    'cost_price' => $cart->product->cost_price ?? 0,
                 ]);
                 
                 // Kurangi stok produk
