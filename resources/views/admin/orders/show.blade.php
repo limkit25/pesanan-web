@@ -106,10 +106,14 @@
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center justify-between">
                                     <h4 class="text-sm font-bold text-gray-900 dark:text-white truncate">{{ $item->product->name }}</h4>
+                                    @if(auth()->user()->role === 'admin')
                                     <p class="text-sm font-bold text-orange-500 ml-2 flex-shrink-0">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</p>
+                                    @endif
                                 </div>
                                 <div class="flex items-center gap-2 mt-1">
+                                    @if(auth()->user()->role === 'admin')
                                     <span class="text-[10px] font-semibold text-gray-400 bg-gray-50 dark:bg-gray-900 px-1.5 py-0.5 rounded">@ Rp {{ number_format($item->price, 0, ',', '.') }}</span>
+                                    @endif
                                     <span class="text-[10px] font-bold text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded">× {{ $item->quantity }}</span>
                                 </div>
                             </div>
@@ -146,7 +150,7 @@
                             </div>
                         </div>
 
-                        @if($order->phone)
+                        @if($order->phone && auth()->user()->role === 'admin')
                         <div class="flex items-center gap-2.5">
                             <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #ecfdf5; color: #10b981;">
                                 <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
@@ -205,6 +209,7 @@
                 </div>
 
                 <!-- Payment Summary -->
+                @if(auth()->user()->role === 'admin')
                 <div class="rounded-xl border border-gray-200 bg-gray-50/50 px-5 py-4 shadow-sm dark:border-gray-800 dark:bg-gray-900/40">
                     <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Ringkasan Bayar</h3>
                     <dl class="space-y-2.5">
@@ -229,6 +234,7 @@
                         </div>
                     </dl>
                 </div>
+                @endif
             </div>
         </div>
     </div>

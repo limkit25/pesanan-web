@@ -14,7 +14,7 @@ class UserController extends Controller
     {
         $query = User::query();
         
-        if ($request->has('role') && in_array($request->role, ['admin', 'customer'])) {
+        if ($request->has('role') && in_array($request->role, ['admin', 'customer', 'dapur'])) {
             $query->where('role', $request->role);
         }
 
@@ -41,7 +41,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['required', 'in:admin,customer'],
+            'role' => ['required', 'in:admin,customer,dapur'],
         ]);
 
         User::create([
@@ -64,7 +64,7 @@ class UserController extends Controller
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class.',email,'.$user->id],
-            'role' => ['required', 'in:admin,customer'],
+            'role' => ['required', 'in:admin,customer,dapur'],
         ];
 
         if ($request->filled('password')) {

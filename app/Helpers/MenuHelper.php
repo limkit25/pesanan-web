@@ -6,58 +6,84 @@ class MenuHelper
 {
     public static function getMainNavItems()
     {
-        return [
+        $items = [
             [
                 'icon' => 'dashboard',
                 'name' => 'Dashboard',
                 'path' => '/admin/dashboard',
             ],
-            [
+        ];
+
+        // Hanya admin yang bisa melihat Kategori, Produk, dan Pengguna
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            $items[] = [
                 'icon' => 'forms',
                 'name' => 'Kategori',
                 'path' => '/admin/categories',
-            ],
-            [
+            ];
+            $items[] = [
                 'icon' => 'ecommerce',
                 'name' => 'Produk',
                 'path' => '/admin/products',
-            ],
-            [
-                'icon' => 'tables',
-                'name' => 'Pesanan',
-                'path' => '/admin/orders',
-            ],
-            [
+            ];
+        }
+
+        // Pesanan bisa dilihat semua (admin & dapur)
+        $items[] = [
+            'icon' => 'tables',
+            'name' => 'Pesanan',
+            'path' => '/admin/orders',
+        ];
+
+        // Pengguna hanya untuk admin
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            $items[] = [
                 'icon' => 'user-profile',
                 'name' => 'Pengguna',
                 'path' => '/admin/users',
-            ],
-        ];
+            ];
+        }
+
+        return $items;
     }
 
     public static function getOthersItems()
     {
-        return [
-            [
+        $items = [];
+
+        // Pengaturan hanya untuk admin
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            $items[] = [
                 'icon' => 'ui-elements',
                 'name' => 'Pengaturan',
                 'path' => '/admin/settings',
-            ],
-            [
-                'icon' => 'pages',
-                'name' => 'Laporan',
-                'subItems' => [
-                    [
-                        'name' => 'Laporan Penjualan',
-                        'path' => '/admin/reports',
-                    ],
-                    [
-                        'name' => 'Rekap Kirim/Ambil',
-                        'path' => '/admin/reports/delivery',
-                    ],
-                ]
-            ],
+            ];
+        }
+
+        // Laporan
+        $reportsSubItems = [];
+        
+        // Penjualan hanya untuk admin
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            $reportsSubItems[] = [
+                'name' => 'Laporan Penjualan',
+                'path' => '/admin/reports',
+            ];
+        }
+        
+        // Rekap Kirim/Ambil untuk admin & dapur
+        $reportsSubItems[] = [
+            'name' => 'Rekap Kirim/Ambil',
+            'path' => '/admin/reports/delivery',
         ];
+
+        $items[] = [
+            'icon' => 'pages',
+            'name' => 'Laporan',
+            'subItems' => $reportsSubItems
+        ];
+
+        return $items;
     }
 
     public static function getMenuGroups()

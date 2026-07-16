@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/dashboard', function () {
-    if (auth()->user()->role === 'admin') {
+    if (in_array(auth()->user()->role, ['admin', 'dapur'])) {
         return redirect()->route('admin.dashboard');
     }
     // Pembeli langsung kembali ke beranda
@@ -35,16 +35,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         return view('admin.dashboard', compact('totalOrders', 'totalProducts', 'totalCategories', 'pendingOrders', 'upcomingDeliveriesCount'));
     })->name('dashboard');
 
-    Route::resource('categories', CategoryController::class);
-    Route::resource('products', ProductController::class);
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
     Route::get('/orders/check-new', [\App\Http\Controllers\Admin\OrderController::class, 'checkNewOrders'])->middleware('throttle:30,1')->name('orders.check');
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'edit', 'update']);
-    Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
-    Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
     Route::get('/reports/delivery', [\App\Http\Controllers\Admin\ReportController::class, 'deliveryRecap'])->name('reports.delivery');
     Route::get('/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/export', [\App\Http\Controllers\Admin\ReportController::class, 'export'])->name('reports.export');
+
+    Route::middleware('superadmin')->group(function () {
+        Route::resource('categories', CategoryController::class);
+        Route::resource('products', ProductController::class);
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+        Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
+    });
 });
 
 Route::middleware('auth')->group(function () {

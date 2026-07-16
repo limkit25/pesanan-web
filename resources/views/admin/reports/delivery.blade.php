@@ -181,7 +181,9 @@
                     <tr>
                         <th class="py-3 pl-6 pr-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Jam</th>
                         <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">ID</th>
-                        <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Pelanggan & WA</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                            Pelanggan @if(auth()->check() && auth()->user()->role === 'admin') & WA @endif
+                        </th>
                         <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Alamat / Meja</th>
                         <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Detail Menu Dipesan</th>
                         <th class="px-3 py-3 text-center text-[10px] font-bold uppercase tracking-wider text-gray-400">Status</th>
@@ -205,7 +207,7 @@
                             <!-- User Name & Phone -->
                             <td class="px-3 py-3.5 text-xs">
                                 <div class="font-bold text-gray-900 dark:text-white">{{ $order->user->name }}</div>
-                                @if($order->phone)
+                                @if($order->phone && auth()->check() && auth()->user()->role === 'admin')
                                     @php
                                         $cleanPhone = preg_replace('/[^0-9]/', '', $order->phone);
                                         if (strpos($cleanPhone, '0') === 0) {

@@ -38,6 +38,10 @@ class OrderController extends Controller
 
     public function edit(Order $order)
     {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak. Anda tidak memiliki izin untuk mengedit detail pesanan.');
+        }
+
         $order->load(['user', 'orderItems.product']);
         $products = \App\Models\Product::orderBy('name')->get();
         

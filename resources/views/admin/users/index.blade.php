@@ -46,6 +46,7 @@
     <div class="mb-6 flex gap-2 overflow-x-auto custom-scrollbar pb-2">
         <a href="{{ route('admin.users.index') }}" class="px-5 py-2 rounded-xl text-sm font-bold transition-all duration-300 {{ !request('role') ? 'bg-gray-900 text-white shadow-md dark:bg-white dark:text-gray-900' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700' }}">Semua</a>
         <a href="{{ route('admin.users.index', ['role' => 'admin']) }}" class="px-5 py-2 rounded-xl text-sm font-bold transition-all duration-300 {{ request('role') == 'admin' ? 'bg-orange-50 text-orange-600 border border-orange-200 shadow-sm' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700' }}">Admin</a>
+        <a href="{{ route('admin.users.index', ['role' => 'dapur']) }}" class="px-5 py-2 rounded-xl text-sm font-bold transition-all duration-300 {{ request('role') == 'dapur' ? 'bg-pink-50 text-pink-600 border border-pink-200 shadow-sm' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700' }}">Staf Dapur</a>
         <a href="{{ route('admin.users.index', ['role' => 'customer']) }}" class="px-5 py-2 rounded-xl text-sm font-bold transition-all duration-300 {{ request('role') == 'customer' ? 'bg-blue-50 text-blue-600 border border-blue-200 shadow-sm' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700' }}">Customer</a>
     </div>
 
@@ -81,6 +82,11 @@
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-orange-600 border border-orange-100 dark:bg-orange-500/10 dark:border-orange-500/20 dark:text-orange-400">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                                         Admin
+                                    </span>
+                                @elseif($user->role === 'dapur')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-pink-50 text-pink-600 border border-pink-100 dark:bg-pink-500/10 dark:border-pink-500/20 dark:text-pink-400">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                                        Staf Dapur
                                     </span>
                                 @else
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-600 border border-blue-100 dark:bg-blue-500/10 dark:border-blue-500/20 dark:text-blue-400">

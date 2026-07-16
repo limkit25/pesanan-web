@@ -92,7 +92,7 @@
                     </div>
                     <input type="hidden" name="role" value="{{ $user->role }}">
                 @else
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <label class="relative flex cursor-pointer">
                             <input type="radio" name="role" value="customer" class="peer sr-only" {{ old('role', $user->role) == 'customer' ? 'checked' : '' }}>
                             <div class="w-full rounded-2xl border-2 border-gray-100 bg-white p-5 text-gray-600 transition-all hover:bg-gray-50 peer-checked:border-blue-500 peer-checked:bg-blue-50/50 peer-checked:text-blue-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:peer-checked:border-blue-500 dark:peer-checked:bg-blue-900/20 dark:peer-checked:text-blue-300">
@@ -102,7 +102,22 @@
                                     </div>
                                     <div>
                                         <h4 class="font-bold text-sm">Customer</h4>
-                                        <p class="text-[11px] mt-0.5 opacity-80">Akses terbatas untuk berbelanja.</p>
+                                        <p class="text-[11px] mt-0.5 opacity-80">Akses berbelanja.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="relative flex cursor-pointer">
+                            <input type="radio" name="role" value="dapur" class="peer sr-only" {{ old('role', $user->role) == 'dapur' ? 'checked' : '' }}>
+                            <div class="w-full rounded-2xl border-2 border-gray-100 bg-white p-5 text-gray-600 transition-all hover:bg-gray-50 peer-checked:border-pink-500 peer-checked:bg-pink-50/50 peer-checked:text-pink-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:peer-checked:border-pink-500 dark:peer-checked:bg-pink-900/20 dark:peer-checked:text-pink-300">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-pink-100 dark:bg-pink-900/50 text-pink-500 flex items-center justify-center">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-sm">Dapur</h4>
+                                        <p class="text-[11px] mt-0.5 opacity-80">Akses kelola produksi.</p>
                                     </div>
                                 </div>
                             </div>
@@ -117,7 +132,7 @@
                                     </div>
                                     <div>
                                         <h4 class="font-bold text-sm">Admin</h4>
-                                        <p class="text-[11px] mt-0.5 opacity-80">Akses penuh ke semua fitur.</p>
+                                        <p class="text-[11px] mt-0.5 opacity-80">Akses penuh fitur.</p>
                                     </div>
                                 </div>
                             </div>
