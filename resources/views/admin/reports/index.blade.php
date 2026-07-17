@@ -291,9 +291,11 @@
                             </td>
                             <td class="px-3 py-3 text-xs">
                                 @if($order->payment_status === 'paid')
-                                    <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600 border border-emerald-100">Lunas</span>
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600 border border-emerald-100" title="Rp {{ number_format($order->paid_amount, 0, ',', '.') }}">Lunas</span>
+                                @elseif($order->payment_status === 'partial')
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2 py-0.5 text-[10px] font-bold text-yellow-600 border border-yellow-100" title="Rp {{ number_format($order->paid_amount, 0, ',', '.') }}">Sebagian</span>
                                 @else
-                                    <span class="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-bold text-red-600 border border-red-100">Belum Lunas</span>
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-bold text-red-600 border border-red-100" title="Belum ada pembayaran">Belum Lunas</span>
                                 @endif
                             </td>
                             <td class="px-3 py-3 text-xs text-gray-400">{{ $order->created_at->format('d M Y, H:i') }}</td>

@@ -62,7 +62,8 @@ class OrderController extends Controller
     {
         $rules = [
             'status' => 'required|in:pending,processing,completed,cancelled',
-            'payment_status' => 'nullable|in:unpaid,paid'
+            'payment_status' => 'nullable|in:unpaid,partial,paid',
+            'paid_amount' => 'nullable|numeric|min:0'
         ];
 
         $isFullEdit = $request->has('phone') || $request->has('shipping_address') || $request->has('items');
@@ -84,6 +85,13 @@ class OrderController extends Controller
             $updateData = ['status' => $request->status];
             if ($request->has('payment_status')) {
                 $updateData['payment_status'] = $request->payment_status;
+                if ($request->payment_status === 'unpaid') {
+                    $updateData['paid_amount'] = 0;
+                } elseif ($request->payment_status === 'paid') {
+                    $updateData['paid_amount'] = $order->total_price;
+                } elseif ($request->payment_status === 'partial') {
+                    $updateData['paid_amount'] = $request->paid_amount ?? 0;
+                }
             }
             $order->update($updateData);
 
@@ -121,6 +129,12 @@ class OrderController extends Controller
             ];
             if ($request->has('payment_status')) {
                 $updateDataFull['payment_status'] = $request->payment_status;
+                if ($request->payment_status === 'unpaid') {
+                    $updateDataFull['paid_amount'] = 0;
+                } elseif ($request->payment_status === 'partial') {
+                    $updateDataFull['paid_amount'] = $request->paid_amount ?? 0;
+                }
+                // Jika 'paid', kita update paid_amount nanti setelah total_price dihitung ulang
             }
             $order->update($updateDataFull);
 
@@ -157,7 +171,11 @@ class OrderController extends Controller
                 $total = $total + ($total * 0.1);
             }
 
-            $order->update(['total_price' => $total]);
+            $finalUpdates = ['total_price' => $total];
+            if ($request->payment_status === 'paid') {
+                $finalUpdates['paid_amount'] = $total;
+            }
+            $order->update($finalUpdates);
 
             if ($oldStatus !== $request->status) {
                 \App\Models\OrderLog::create([

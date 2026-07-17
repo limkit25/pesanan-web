@@ -105,10 +105,12 @@
                         <td class="text-right">
                             @if($order->payment_status === 'paid')
                                 <span class="font-bold text-emerald-600">LUNAS</span>
+                            @elseif($order->payment_status === 'partial')
+                                <span class="font-bold text-yellow-600">SEBAGIAN (DP)</span>
                             @elseif($order->status === 'cancelled')
                                 <span class="font-bold text-red-600">BATAL</span>
                             @else
-                                <span class="font-bold text-orange-500">BELUM LUNAS</span>
+                                <span class="font-bold text-red-600">BELUM LUNAS</span>
                             @endif
                         </td>
                     </tr>
@@ -172,6 +174,17 @@
                     <span>TOTAL:</span>
                     <span class="text-brand-600">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
                 </div>
+                
+                @if($order->payment_status === 'partial')
+                <div class="flex justify-between py-2 text-sm text-gray-600">
+                    <span>Telah Dibayar (DP):</span>
+                    <span class="font-bold text-gray-900">Rp {{ number_format($order->paid_amount, 0, ',', '.') }}</span>
+                </div>
+                <div class="flex justify-between py-2 text-sm font-bold text-red-600 border-t border-gray-100 mt-1">
+                    <span>Sisa Tagihan:</span>
+                    <span>Rp {{ number_format($order->total_price - $order->paid_amount, 0, ',', '.') }}</span>
+                </div>
+                @endif
             </div>
         </div>
 
