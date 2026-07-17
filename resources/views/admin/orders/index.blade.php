@@ -135,11 +135,9 @@
                 </table>
             </div>
             
-            @if($orders->hasPages())
-                <div class="mt-4">
-                    {{ $orders->links() }}
-                </div>
-            @endif
+            <div class="mt-4">
+                {{ $orders->appends(request()->query())->links() }}
+            </div>
         </div>
     </div>
 @endsection

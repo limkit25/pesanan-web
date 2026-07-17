@@ -116,11 +116,9 @@
                 </table>
             </div>
 
-            @if($products->hasPages())
-                <div class="mt-4">
-                    {{ $products->appends(request()->query())->links() }}
-                </div>
-            @endif
+            <div class="mt-4">
+                {{ $products->appends(request()->query())->links() }}
+            </div>
         </div>
     </div>
 @endsection
