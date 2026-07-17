@@ -121,18 +121,23 @@
         </div>
 
         <!-- Piutang (Sisa Pembayaran) -->
-        <div class="col-span-2 md:col-span-1 lg:col-span-1 bg-white rounded-2xl p-5 border border-red-100 shadow-sm relative overflow-hidden">
-            <div class="absolute -right-4 -bottom-4 opacity-5">
+        <a href="{{ route('admin.orders.index', ['debt' => 1]) }}" class="col-span-2 md:col-span-1 lg:col-span-1 bg-white rounded-2xl p-5 border border-red-100 shadow-sm relative overflow-hidden group hover:border-red-300 hover:shadow-md transition-all cursor-pointer">
+            <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
                 <svg class="w-24 h-24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </div>
             <div class="flex items-center gap-2 mb-3 relative z-10">
                 <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Piutang (Sisa)</span>
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider group-hover:text-red-500 transition-colors">Piutang (Sisa)</span>
             </div>
-            <p class="text-xl font-black text-red-500 relative z-10">Rp {{ number_format($totalReceivables, 0, ',', '.') }}</p>
-        </div>
+            <div class="flex items-end justify-between relative z-10">
+                <p class="text-xl font-black text-red-500">Rp {{ number_format($totalReceivables, 0, ',', '.') }}</p>
+                <div class="w-6 h-6 rounded-full bg-red-50 flex items-center justify-center text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </div>
+            </div>
+        </a>
 
         <!-- Profit/Laba -->
         <div class="col-span-2 md:col-span-1 lg:col-span-1 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl p-5 text-white shadow-lg">

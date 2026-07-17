@@ -26,6 +26,11 @@ class OrderController extends Controller
             $query->where('status', $request->status);
         }
 
+        if ($request->filled('debt')) {
+            $query->where('status', '!=', 'cancelled')
+                  ->whereRaw('total_price > paid_amount');
+        }
+
         $orders = $query->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.orders.index', compact('orders'));
     }
