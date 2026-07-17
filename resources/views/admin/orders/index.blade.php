@@ -1,28 +1,28 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="p-4 sm:p-6">
-        <div class="sm:flex sm:items-center sm:justify-between mb-5">
-            <div>
-                <h1 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Pesanan Masuk</h1>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Kelola dan pantau seluruh pesanan pelanggan secara real-time.</p>
-            </div>
-            <div class="mt-3 sm:mt-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                <form action="{{ route('admin.orders.index') }}" method="GET" class="flex items-center gap-2">
-                    <div class="relative">
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari ID / nama pelanggan..." class="w-full sm:w-56 pl-10 pr-4 py-2 rounded-lg border border-gray-300 text-sm focus:border-pink-500 focus:ring focus:ring-pink-200">
-                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </div>
-                    <select name="status" onchange="this.form.submit()" class="rounded-lg border border-gray-300 text-sm py-2 px-3 focus:border-pink-500 focus:ring focus:ring-pink-200">
-                        <option value="">Semua Status</option>
-                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
-                        <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>Diproses</option>
-                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Selesai</option>
-                        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Batal</option>
-                    </select>
-                </form>
-            </div>
+<div class="p-4 sm:p-6 lg:p-8">
+    <div class="sm:flex sm:items-center sm:justify-between mb-8">
+        <div>
+            <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">Pesanan Masuk</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Kelola dan pantau seluruh pesanan pelanggan secara real-time.</p>
         </div>
+        <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
+            <form action="{{ route('admin.orders.index') }}" method="GET" class="flex items-center gap-2">
+                <div class="relative">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari ID / nama pelanggan..." class="w-full sm:w-56 pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-pink-500 focus:ring focus:ring-pink-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <select name="status" onchange="this.form.submit()" class="rounded-xl border border-gray-300 text-sm py-2.5 px-3 focus:border-pink-500 focus:ring focus:ring-pink-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    <option value="">Semua Status</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Menunggu</option>
+                    <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>Diproses</option>
+                    <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Selesai</option>
+                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Batal</option>
+                </select>
+            </form>
+        </div>
+    </div>
         
         @if(session('success'))
             <div class="mb-4 flex items-center gap-2 rounded-xl bg-success-50 px-3 py-2.5 border border-success-100 text-success-600 dark:bg-success-500/10 dark:border-success-500/20 dark:text-success-400" role="alert">

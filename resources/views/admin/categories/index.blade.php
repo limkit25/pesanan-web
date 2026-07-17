@@ -2,25 +2,25 @@
 
 @section('content')
 
-    <div class="p-4 sm:p-6">
-        <div class="sm:flex sm:items-center sm:justify-between mb-5">
-            <div>
-                <h1 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Daftar Kategori</h1>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Kelola kategori menu untuk memudahkan pelanggan.</p>
-            </div>
-            <div class="mt-3 sm:mt-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                <form action="{{ route('admin.categories.index') }}" method="GET" class="flex items-center gap-2 w-full sm:w-auto">
-                    <div class="relative w-full sm:w-56">
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kategori..." class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 text-sm focus:border-brand-500 focus:ring focus:ring-brand-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:border-brand-500 dark:focus:ring-brand-500/20">
-                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </div>
-                </form>
-                <a href="{{ route('admin.categories.create') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 text-sm font-semibold shadow-theme-sm transition-colors w-full sm:w-auto whitespace-nowrap dark:bg-brand-500 dark:hover:bg-brand-400">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    Tambah Kategori
-                </a>
-            </div>
+<div class="p-4 sm:p-6 lg:p-8">
+    <div class="sm:flex sm:items-center sm:justify-between mb-8">
+        <div>
+            <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">Daftar Kategori</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Kelola kategori menu untuk memudahkan pelanggan.</p>
         </div>
+        <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row gap-3">
+            <form action="{{ route('admin.categories.index') }}" method="GET" class="flex-1 sm:flex-initial">
+                <div class="relative">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kategori..." class="w-full sm:w-56 pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:border-pink-500 focus:ring focus:ring-pink-200 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+            </form>
+            <a href="{{ route('admin.categories.create') }}" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-white transition-all duration-300 bg-gradient-to-r from-orange-500 to-pink-500 border border-transparent rounded-xl shadow-md hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                Tambah Kategori
+            </a>
+        </div>
+    </div>
         
         @if(session('success'))
             <div class="mb-4 flex items-center gap-2 rounded-xl bg-success-50 px-3 py-2.5 border border-success-100 text-success-600 dark:bg-success-500/10 dark:border-success-500/20 dark:text-success-400" role="alert">
