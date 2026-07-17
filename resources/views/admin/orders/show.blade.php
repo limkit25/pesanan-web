@@ -279,9 +279,20 @@
                         </div>
                         @endif
                         <div class="flex items-center justify-between pt-1">
-                            <dt class="text-xs font-black text-gray-900 dark:text-white">Total</dt>
+                            <dt class="text-xs font-black text-gray-900 dark:text-white">Total Tagihan</dt>
                             <dd class="text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Rp {{ number_format($order->total_price, 0, ',', '.') }}</dd>
                         </div>
+                        
+                        @if($order->payment_status === 'partial')
+                        <div class="flex items-center justify-between pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
+                            <dt class="text-xs font-bold text-gray-600 dark:text-gray-400">Telah Dibayar (DP)</dt>
+                            <dd class="text-xs font-bold text-gray-900 dark:text-white">Rp {{ number_format($order->paid_amount, 0, ',', '.') }}</dd>
+                        </div>
+                        <div class="flex items-center justify-between pt-1">
+                            <dt class="text-xs font-bold text-red-500">Sisa Tagihan (Piutang)</dt>
+                            <dd class="text-xs font-bold text-red-500">Rp {{ number_format($order->total_price - $order->paid_amount, 0, ',', '.') }}</dd>
+                        </div>
+                        @endif
                     </dl>
                 </div>
                 @endif
