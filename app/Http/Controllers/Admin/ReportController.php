@@ -62,6 +62,19 @@ class ReportController extends Controller
             ->whereBetween('created_at', [$startDate, $endDate])
             ->count();
 
+        // Uang Kas Masuk (Aktual)
+        $totalActualRevenue = Order::where('status', '!=', 'cancelled')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->sum('paid_amount');
+
+        // Piutang (Sisa tagihan yang belum dibayar)
+        $totalReceivables = Order::where('status', '!=', 'cancelled')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get()
+            ->sum(function($order) {
+                return max(0, $order->total_price - $order->paid_amount);
+            });
+
         // Produk Terlaris
         $topProducts = Product::withCount(['orderItems as total_sold' => function ($query) use ($startDate, $endDate) {
                 $query->whereHas('order', function ($q) use ($startDate, $endDate) {
@@ -97,7 +110,7 @@ class ReportController extends Controller
         return view('admin.reports.index', compact(
             'totalRevenue', 'totalCost', 'totalProfit', 'totalOrders', 'completedOrders', 'cancelledOrders',
             'pendingOrders', 'newCustomers', 'topProducts', 'dailyRevenue',
-            'recentOrders', 'startDate', 'endDate'
+            'recentOrders', 'startDate', 'endDate', 'totalActualRevenue', 'totalReceivables'
         ));
     }
 
