@@ -33,6 +33,16 @@ class OrderController extends Controller
         return view('orders.show', compact('order', 'bankName', 'bankAccount', 'bankOwner'));
     }
 
+    public function invoice(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $order->load('orderItems.product');
+        return view('admin.orders.invoice', compact('order'));
+    }
+
     public function uploadPaymentProof(Request $request, Order $order)
     {
         if ($order->user_id !== Auth::id()) {

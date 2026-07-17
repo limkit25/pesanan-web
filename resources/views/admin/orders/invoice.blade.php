@@ -45,7 +45,12 @@
 
     <!-- Tombol Navigasi (Sembunyi saat cetak) -->
     <div class="max-w-[800px] mx-auto mb-6 flex justify-between items-center no-print">
-        <a href="{{ route('admin.orders.show', $order->id) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+        @php
+            $backRoute = auth()->check() && auth()->user()->role === 'admin' 
+                ? route('admin.orders.show', $order->id) 
+                : route('orders.show', $order->id);
+        @endphp
+        <a href="{{ $backRoute }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali
         </a>
