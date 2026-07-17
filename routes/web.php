@@ -36,6 +36,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     })->name('dashboard');
 
     Route::get('/orders/check-new', [\App\Http\Controllers\Admin\OrderController::class, 'checkNewOrders'])->middleware('throttle:30,1')->name('orders.check');
+    Route::get('/orders/{order}/invoice', [\App\Http\Controllers\Admin\OrderController::class, 'invoice'])->name('orders.invoice');
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'edit', 'update']);
     Route::get('/reports/delivery', [\App\Http\Controllers\Admin\ReportController::class, 'deliveryRecap'])->name('reports.delivery');
     Route::get('/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');

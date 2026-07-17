@@ -167,6 +167,12 @@ class OrderController extends Controller
         }
     }
 
+    public function invoice(Order $order)
+    {
+        $order->load(['user', 'orderItems.product']);
+        return view('admin.orders.invoice', compact('order'));
+    }
+
     public function checkNewOrders(Request $request)
     {
         $pendingCount = Order::where('status', 'pending')->count();
