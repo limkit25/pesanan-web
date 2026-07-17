@@ -258,7 +258,8 @@
                         <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Pelanggan</th>
                         <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Total</th>
                         <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Laba</th>
-                        <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Status</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Status Pesanan</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Pembayaran</th>
                         <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Waktu</th>
                     </tr>
                 </thead>
@@ -286,6 +287,13 @@
                                     <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600 border border-emerald-100">Selesai</span>
                                 @else
                                     <span class="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-bold text-red-600 border border-red-100">Batal</span>
+                                @endif
+                            </td>
+                            <td class="px-3 py-3 text-xs">
+                                @if($order->payment_status === 'paid')
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-600 border border-emerald-100">Lunas</span>
+                                @else
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-bold text-red-600 border border-red-100">Belum Lunas</span>
                                 @endif
                             </td>
                             <td class="px-3 py-3 text-xs text-gray-400">{{ $order->created_at->format('d M Y, H:i') }}</td>

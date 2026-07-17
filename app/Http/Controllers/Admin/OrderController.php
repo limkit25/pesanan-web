@@ -61,7 +61,8 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         $rules = [
-            'status' => 'required|in:pending,processing,completed,cancelled'
+            'status' => 'required|in:pending,processing,completed,cancelled',
+            'payment_status' => 'nullable|in:unpaid,paid'
         ];
 
         $isFullEdit = $request->has('phone') || $request->has('shipping_address') || $request->has('items');
@@ -79,7 +80,12 @@ class OrderController extends Controller
 
         if (!$isFullEdit) {
             $oldStatus = $order->status;
-            $order->update(['status' => $request->status]);
+            
+            $updateData = ['status' => $request->status];
+            if ($request->has('payment_status')) {
+                $updateData['payment_status'] = $request->payment_status;
+            }
+            $order->update($updateData);
 
             if ($oldStatus !== $request->status) {
                 \App\Models\OrderLog::create([
@@ -107,12 +113,16 @@ class OrderController extends Controller
             }
 
             // Update order details
-            $order->update([
+            $updateDataFull = [
                 'status' => $request->status,
                 'phone' => $request->phone,
                 'shipping_address' => $request->shipping_address,
                 'delivery_date' => $request->delivery_date,
-            ]);
+            ];
+            if ($request->has('payment_status')) {
+                $updateDataFull['payment_status'] = $request->payment_status;
+            }
+            $order->update($updateDataFull);
 
             // Delete old items
             $order->orderItems()->delete();

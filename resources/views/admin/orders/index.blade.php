@@ -42,6 +42,7 @@
                             @if(auth()->user()->role === 'admin')
                             <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Total</th>
                             @endif
+                            <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Pembayaran</th>
                             <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Status</th>
                             <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Waktu</th>
                             <th scope="col" class="relative py-3 pl-3 pr-5 text-right">
@@ -74,6 +75,17 @@
                                     Rp {{ number_format($order->total_price, 0, ',', '.') }}
                                 </td>
                                 @endif
+                                <td class="whitespace-nowrap px-3 py-3 text-xs">
+                                    @if($order->payment_status === 'paid')
+                                        <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
+                                            Lunas
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-1 text-[10px] font-bold text-red-600 dark:bg-red-500/10 dark:text-red-400">
+                                            Belum Lunas
+                                        </span>
+                                    @endif
+                                </td>
                                 <td class="whitespace-nowrap px-3 py-3 text-xs">
                                     @if($order->status === 'pending')
                                         <span class="inline-flex items-center gap-1 rounded-full bg-warning-50 px-2 py-1 text-[10px] font-bold text-warning-600 dark:bg-warning-500/10 dark:text-warning-400">

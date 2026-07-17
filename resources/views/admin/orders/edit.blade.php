@@ -53,6 +53,15 @@
                                 </select>
                             </div>
 
+                            <!-- Payment Status -->
+                            <div>
+                                <label for="payment_status" class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">Status Pembayaran</label>
+                                <select id="payment_status" name="payment_status" class="block w-full rounded-lg border-gray-300 bg-gray-50 py-2 pl-3 pr-8 text-xs font-semibold focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                                    <option value="unpaid" {{ $order->payment_status === 'unpaid' ? 'selected' : '' }}>Belum Lunas</option>
+                                    <option value="paid" {{ $order->payment_status === 'paid' ? 'selected' : '' }}>Lunas</option>
+                                </select>
+                            </div>
+
                             <!-- Phone -->
                             <div>
                                 <label for="phone" class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">Nomor Telepon / WA</label>

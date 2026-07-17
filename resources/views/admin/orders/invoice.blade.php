@@ -103,7 +103,7 @@
                     <tr>
                         <td class="text-gray-500 py-1 text-right pr-4">Status Bayar:</td>
                         <td class="text-right">
-                            @if($order->status === 'completed')
+                            @if($order->payment_status === 'paid')
                                 <span class="font-bold text-emerald-600">LUNAS</span>
                             @elseif($order->status === 'cancelled')
                                 <span class="font-bold text-red-600">BATAL</span>

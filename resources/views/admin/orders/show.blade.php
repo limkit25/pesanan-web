@@ -76,22 +76,34 @@
 
                 <!-- Update Status Control -->
                 <div class="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm dark:border-gray-800 dark:bg-gray-dark">
-                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Ubah Status</h3>
-                    <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" class="flex items-end gap-3">
+                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Update Status Pesanan & Pembayaran</h3>
+                    <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" class="flex flex-col gap-3">
                         @csrf
                         @method('PATCH')
-                        <div class="flex-1">
-                            <select id="status" name="status" class="block w-full rounded-lg border-gray-200 bg-gray-50 py-2 pl-3 pr-8 text-xs font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
-                                <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending (Menunggu)</option>
-                                <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Diproses</option>
-                                <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>Selesai</option>
-                                <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
-                            </select>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <div class="flex-1">
+                                <label for="status" class="block text-[10px] font-bold text-gray-400 mb-1">Status Pesanan</label>
+                                <select id="status" name="status" class="block w-full rounded-lg border-gray-200 bg-gray-50 py-2 pl-3 pr-8 text-xs font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                                    <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending (Menunggu)</option>
+                                    <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Diproses</option>
+                                    <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>Selesai</option>
+                                    <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
+                                </select>
+                            </div>
+                            <div class="flex-1">
+                                <label for="payment_status" class="block text-[10px] font-bold text-gray-400 mb-1">Status Pembayaran</label>
+                                <select id="payment_status" name="payment_status" class="block w-full rounded-lg border-gray-200 bg-gray-50 py-2 pl-3 pr-8 text-xs font-semibold focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                                    <option value="unpaid" {{ $order->payment_status === 'unpaid' ? 'selected' : '' }}>Belum Lunas</option>
+                                    <option value="paid" {{ $order->payment_status === 'paid' ? 'selected' : '' }}>Lunas</option>
+                                </select>
+                            </div>
                         </div>
-                        <button type="submit" class="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-bold px-4 py-2 rounded-lg shadow-sm active:scale-95 transition-all text-xs flex items-center gap-1.5 whitespace-nowrap">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                            Simpan
-                        </button>
+                        <div class="flex justify-end">
+                            <button type="submit" class="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-bold px-4 py-2 rounded-lg shadow-sm active:scale-95 transition-all text-xs flex items-center gap-1.5 whitespace-nowrap">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                Simpan Perubahan
+                            </button>
+                        </div>
                     </form>
                 </div>
 
