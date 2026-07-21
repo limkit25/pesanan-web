@@ -106,14 +106,14 @@
     <!-- Stats Cards -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
         <!-- Total Nilai Transaksi (Pendapatan) -->
-        <div class="col-span-2 md:col-span-1 lg:col-span-1 bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+        <div class="col-span-2 md:col-span-1 lg:col-span-1 bg-white dark:bg-gray-dark rounded-2xl p-5 border border-gray-100 dark:border-gray-800 shadow-sm">
             <div class="flex items-center gap-2 mb-3">
-                <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500">
+                <div class="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Nilai Transaksi</span>
             </div>
-            <p class="text-xl font-black text-gray-900">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</p>
+            <p class="text-xl font-black text-gray-900 dark:text-white">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</p>
         </div>
 
         <!-- Uang Kas Masuk Aktual -->
@@ -128,19 +128,19 @@
         </div>
 
         <!-- Piutang (Sisa Pembayaran) -->
-        <a href="{{ route('admin.orders.index', ['debt' => 1]) }}" class="col-span-2 md:col-span-1 lg:col-span-1 bg-white rounded-2xl p-5 border border-red-100 shadow-sm relative overflow-hidden group hover:border-red-300 hover:shadow-md transition-all cursor-pointer">
+        <a href="{{ route('admin.orders.index', ['debt' => 1]) }}" class="col-span-2 md:col-span-1 lg:col-span-1 bg-white dark:bg-gray-dark rounded-2xl p-5 border border-red-100 dark:border-red-900/30 shadow-sm relative overflow-hidden group hover:border-red-300 dark:hover:border-red-700 hover:shadow-md transition-all cursor-pointer">
             <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
                 <svg class="w-24 h-24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </div>
             <div class="flex items-center gap-2 mb-3 relative z-10">
-                <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-500">
+                <div class="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-500/10 flex items-center justify-center text-red-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider group-hover:text-red-500 transition-colors">Piutang (Sisa)</span>
             </div>
             <div class="flex items-end justify-between relative z-10">
                 <p class="text-xl font-black text-red-500">Rp {{ number_format($totalReceivables, 0, ',', '.') }}</p>
-                <div class="w-6 h-6 rounded-full bg-red-50 flex items-center justify-center text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div class="w-6 h-6 rounded-full bg-red-50 dark:bg-red-500/20 flex items-center justify-center text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </div>
             </div>
@@ -161,65 +161,65 @@
     <!-- Secondary Stats Cards -->
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
         <!-- Total Modal (Moved to secondary row) -->
-        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+        <div class="bg-white dark:bg-gray-dark rounded-2xl p-5 border border-gray-100 dark:border-gray-800 shadow-sm">
             <div class="flex items-center gap-2 mb-3">
-                <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500">
+                <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
                 </div>
                 <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Modal</span>
             </div>
-            <p class="text-xl font-black text-gray-900">Rp {{ number_format($totalCost, 0, ',', '.') }}</p>
+            <p class="text-xl font-black text-gray-900 dark:text-white">Rp {{ number_format($totalCost, 0, ',', '.') }}</p>
         </div>
 
         <!-- Total Pesanan -->
-        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+        <div class="bg-white dark:bg-gray-dark rounded-2xl p-5 border border-gray-100 dark:border-gray-800 shadow-sm">
             <div class="flex items-center gap-2 mb-3">
-                <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500">
+                <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                 </div>
                 <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Pesanan</span>
             </div>
-            <p class="text-xl font-black text-gray-900">{{ $totalOrders }}</p>
+            <p class="text-xl font-black text-gray-900 dark:text-white">{{ $totalOrders }}</p>
         </div>
 
         <!-- Selesai -->
-        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+        <div class="bg-white dark:bg-gray-dark rounded-2xl p-5 border border-gray-100 dark:border-gray-800 shadow-sm">
             <div class="flex items-center gap-2 mb-3">
-                <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-500">
+                <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Selesai</span>
             </div>
-            <p class="text-xl font-black text-emerald-600">{{ $completedOrders }}</p>
+            <p class="text-xl font-black text-emerald-600 dark:text-emerald-400">{{ $completedOrders }}</p>
         </div>
 
         <!-- Batal -->
-        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+        <div class="bg-white dark:bg-gray-dark rounded-2xl p-5 border border-gray-100 dark:border-gray-800 shadow-sm">
             <div class="flex items-center gap-2 mb-3">
-                <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-500">
+                <div class="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-500/10 flex items-center justify-center text-red-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Batal</span>
             </div>
-            <p class="text-xl font-black text-red-600">{{ $cancelledOrders }}</p>
+            <p class="text-xl font-black text-red-600 dark:text-red-400">{{ $cancelledOrders }}</p>
         </div>
 
         <!-- Customer Baru -->
-        <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+        <div class="bg-white dark:bg-gray-dark rounded-2xl p-5 border border-gray-100 dark:border-gray-800 shadow-sm">
             <div class="flex items-center gap-2 mb-3">
-                <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-500">
+                <div class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-500">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                 </div>
                 <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Customer Baru</span>
             </div>
-            <p class="text-xl font-black text-purple-600">{{ $newCustomers }}</p>
+            <p class="text-xl font-black text-purple-600 dark:text-purple-400">{{ $newCustomers }}</p>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <!-- Grafik Pendapatan Harian -->
-        <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <div class="lg:col-span-2 bg-white dark:bg-gray-dark rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm">
+            <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                 <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
                 Pendapatan Harian
             </h3>
@@ -251,8 +251,8 @@
         </div>
 
         <!-- Produk Terlaris -->
-        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <div class="bg-white dark:bg-gray-dark rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm">
+            <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                 <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
                 Produk Terlaris
             </h3>
