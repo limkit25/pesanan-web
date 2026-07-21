@@ -68,7 +68,8 @@ class OrderController extends Controller
         $rules = [
             'status' => 'required|in:pending,processing,completed,cancelled',
             'payment_status' => 'nullable|in:unpaid,partial,paid',
-            'paid_amount' => 'nullable|numeric|min:0'
+            'paid_amount' => 'nullable|numeric|min:0',
+            'payment_proof' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ];
 
         $isFullEdit = $request->has('phone') || $request->has('shipping_address') || $request->has('items');
@@ -97,6 +98,9 @@ class OrderController extends Controller
                 } elseif ($request->payment_status === 'partial') {
                     $updateData['paid_amount'] = $request->paid_amount ?? 0;
                 }
+            }
+            if ($request->hasFile('payment_proof')) {
+                $updateData['payment_proof'] = $request->file('payment_proof')->store('payments', 'public');
             }
             $order->update($updateData);
 
@@ -140,6 +144,9 @@ class OrderController extends Controller
                     $updateDataFull['paid_amount'] = $request->paid_amount ?? 0;
                 }
                 // Jika 'paid', kita update paid_amount nanti setelah total_price dihitung ulang
+            }
+            if ($request->hasFile('payment_proof')) {
+                $updateDataFull['payment_proof'] = $request->file('payment_proof')->store('payments', 'public');
             }
             $order->update($updateDataFull);
 

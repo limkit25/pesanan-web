@@ -78,7 +78,7 @@
                 <!-- Update Status Control -->
                 <div class="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm dark:border-gray-800 dark:bg-gray-dark" x-data="{ paymentStatus: '{{ $order->payment_status }}' }">
                     <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Update Status Pesanan & Pembayaran</h3>
-                    <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" class="flex flex-col gap-3">
+                    <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-3">
                         @csrf
                         @method('PATCH')
                         <div class="flex flex-col sm:flex-row gap-3">
@@ -105,6 +105,16 @@
                             <input type="number" id="paid_amount" name="paid_amount" value="{{ (int)$order->paid_amount }}" placeholder="Contoh: 50000" class="block w-full rounded-lg border-gray-200 bg-gray-50 py-2 px-3 text-xs font-semibold focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
                             <p class="text-[9px] text-gray-500 mt-1 font-semibold">Total Tagihan: Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
                         </div>
+                        
+                        @if($order->payment_method === 'transfer')
+                        <div class="w-full mt-1">
+                            <label for="payment_proof" class="block text-[10px] font-bold text-gray-400 mb-1">Upload/Ganti Bukti Transfer (Opsional)</label>
+                            <input type="file" id="payment_proof" name="payment_proof" accept="image/*" class="block w-full text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100 border border-gray-200 rounded-lg bg-gray-50 cursor-pointer dark:bg-gray-900 dark:border-gray-800 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+                            @error('payment_proof')
+                                <p class="text-rose-500 text-[10px] mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        @endif
                         <div class="flex justify-end">
                             <button type="submit" class="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-bold px-4 py-2 rounded-lg shadow-sm active:scale-95 transition-all text-xs flex items-center gap-1.5 whitespace-nowrap">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
