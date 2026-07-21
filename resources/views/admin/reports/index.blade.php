@@ -233,12 +233,14 @@
                             @php
                                 $heightPercent = ($day->revenue / $maxRevenue) * 100;
                             @endphp
-                            <div class="flex-1 flex flex-col items-center gap-1 group relative">
-                                <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[9px] font-bold px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                            <div class="flex-1 flex flex-col items-center gap-1 group relative h-full justify-end">
+                                <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[9px] font-bold px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
                                     Rp {{ number_format($day->revenue, 0, ',', '.') }} ({{ $day->orders }} pesanan)
                                 </div>
-                                <div class="w-full bg-gradient-to-t from-orange-500 to-pink-400 rounded-t-lg transition-all duration-500 hover:from-orange-600 hover:to-pink-500 min-h-[4px]" style="height: {{ max($heightPercent, 2) }}%;"></div>
-                                <span class="text-[9px] text-gray-400 font-bold">{{ \Carbon\Carbon::parse($day->date)->format('d/m') }}</span>
+                                <div class="w-full flex-1 flex flex-col justify-end">
+                                    <div class="w-full bg-gradient-to-t from-orange-500 to-pink-400 rounded-t-lg transition-all duration-500 hover:from-orange-600 hover:to-pink-500 min-h-[4px]" style="height: {{ max($heightPercent, 2) }}%;"></div>
+                                </div>
+                                <span class="text-[9px] text-gray-400 font-bold shrink-0">{{ \Carbon\Carbon::parse($day->date)->format('d/m') }}</span>
                             </div>
                         @endforeach
                     </div>
@@ -268,7 +270,7 @@
                                 <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-xs font-bold text-gray-900 truncate">{{ $product->name }}</p>
+                                <p class="text-xs font-bold text-gray-900 dark:text-white truncate">{{ $product->name }}</p>
                                 <p class="text-[10px] text-gray-400 font-semibold">{{ (int)$product->total_qty }} terjual</p>
                             </div>
                         </div>
@@ -283,16 +285,16 @@
     </div>
 
     <!-- Pesanan Terbaru -->
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="bg-white dark:bg-gray-dark rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
         <div class="p-6 pb-0">
-            <h3 class="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                 <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 Pesanan Terbaru ({{ $startDate->format('d M Y') }} - {{ $endDate->format('d M Y') }})
             </h3>
         </div>
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-100">
-                <thead class="bg-gray-50/50">
+            <table class="min-w-full divide-y divide-gray-100 dark:divide-gray-800">
+                <thead class="bg-gray-50/50 dark:bg-gray-900/50">
                     <tr>
                         <th class="py-3 pl-6 pr-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">ID</th>
                         <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Pelanggan</th>
@@ -303,12 +305,12 @@
                         <th class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-400">Waktu</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody class="divide-y divide-gray-50 dark:divide-gray-800 bg-white dark:bg-gray-dark">
                     @forelse($recentOrders as $order)
-                        <tr class="hover:bg-gray-50/50 transition-colors">
-                            <td class="py-3 pl-6 pr-3 text-xs font-bold text-gray-900">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</td>
-                            <td class="px-3 py-3 text-xs font-semibold text-gray-600">{{ $order->user->name }}</td>
-                            <td class="px-3 py-3 text-xs font-bold text-gray-900">Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
+                        <tr class="hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors">
+                            <td class="py-3 pl-6 pr-3 text-xs font-bold text-gray-900 dark:text-white">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</td>
+                            <td class="px-3 py-3 text-xs font-semibold text-gray-600 dark:text-gray-300">{{ $order->user->name }}</td>
+                            <td class="px-3 py-3 text-xs font-bold text-gray-900 dark:text-white">Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
                             @php
                                 $cost = $order->orderItems->sum(function($item) {
                                     $c = $item->cost_price;
@@ -338,7 +340,7 @@
                                     <span class="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-bold text-red-600 border border-red-100" title="Belum ada pembayaran">Belum Lunas</span>
                                 @endif
                             </td>
-                            <td class="px-3 py-3 text-xs text-gray-400">{{ $order->created_at->format('d M Y, H:i') }}</td>
+                            <td class="px-3 py-3 text-xs text-gray-400 dark:text-gray-500">{{ $order->created_at->format('d M Y, H:i') }}</td>
                         </tr>
                     @empty
                         <tr>
