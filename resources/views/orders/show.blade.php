@@ -290,7 +290,7 @@
                                         <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Transfer" class="w-full h-32 object-cover hover:scale-105 transition-transform duration-300">
                                     </a>
                                 </div>
-                            @elseif($order->status === 'pending')
+                            @elseif(in_array($order->status, ['pending', 'processing']) && !$order->payment_proof)
                                 <div class="mt-3 border-t border-gray-100 pt-3">
                                     <form action="{{ route('orders.upload_payment', $order) }}" method="POST" enctype="multipart/form-data" class="space-y-3">
                                         @csrf
