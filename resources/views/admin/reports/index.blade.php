@@ -71,18 +71,25 @@
     <!-- Header & Date Filter -->
     <div class="sm:flex sm:items-center sm:justify-between mb-8 no-print">
         <div>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                <span>Manajemen Laporan</span>
+                <span>/</span>
+                <span class="text-orange-500">Laporan Penjualan</span>
+            </div>
             <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">Laporan Penjualan</h1>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Statistik dan ringkasan performa bisnis Anda.</p>
         </div>
         <div class="mt-4 sm:mt-0 flex flex-wrap items-center gap-3">
             <form action="{{ route('admin.reports.index') }}" method="GET" class="flex flex-wrap items-center gap-2">
-                <input type="date" name="start_date" value="{{ $startDate->format('Y-m-d') }}" class="rounded-lg border border-gray-300 text-sm py-2 px-3 focus:border-pink-500 focus:ring focus:ring-pink-200">
+                <input type="date" name="start_date" value="{{ $startDate->format('Y-m-d') }}" class="rounded-lg border border-gray-300 text-sm py-2 px-3 focus:border-pink-500 focus:ring focus:ring-pink-200 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
                 <span class="text-gray-400 text-sm font-bold">s/d</span>
-                <input type="date" name="end_date" value="{{ $endDate->format('Y-m-d') }}" class="rounded-lg border border-gray-300 text-sm py-2 px-3 focus:border-pink-500 focus:ring focus:ring-pink-200">
-                <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm font-bold">Filter</button>
+                <input type="date" name="end_date" value="{{ $endDate->format('Y-m-d') }}" class="rounded-lg border border-gray-300 text-sm py-2 px-3 focus:border-pink-500 focus:ring focus:ring-pink-200 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                <button type="submit" class="px-4 py-2 bg-gray-900 text-white dark:bg-orange-500 dark:hover:bg-orange-600 hover:bg-gray-800 text-sm font-bold rounded-lg transition-colors duration-200">
+                    Filter
+                </button>
             </form>
             
-            <div class="h-8 w-[1px] bg-gray-200 hidden sm:block"></div>
+            <div class="h-8 w-[1px] bg-gray-200 dark:bg-gray-800 hidden sm:block"></div>
 
             <a href="{{ route('admin.reports.export', request()->all()) }}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-bold inline-flex items-center gap-1.5 shadow-sm transition-colors duration-200">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
