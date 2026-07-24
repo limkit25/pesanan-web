@@ -15,9 +15,35 @@
                 </h1>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
-                <a href="{{ route('admin.orders.invoice', $order->id) }}" target="_blank" class="inline-flex items-center gap-1.5 rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-xs font-bold text-gray-700 shadow-sm hover:bg-gray-50 transition-colors dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                    Cetak Invoice
+                @php
+                    $signedInvoiceUrl = URL::signedRoute('invoice.show', $order->id);
+                    $customerName = $order->user ? $order->user->name : ($order->customer_name ?? 'Pelanggan');
+                    $waText = urlencode("Halo {$customerName}, terima kasih telah memesan di FoodieHub.\n\nBerikut adalah link invoice digital pesanan Anda:\n{$signedInvoiceUrl}\n\nHarap simpan link ini sebagai bukti pesanan Anda.");
+                    
+                    $cleanPhone = '';
+                    if($order->phone) {
+                        $cleanPhone = preg_replace('/[^0-9]/', '', $order->phone);
+                        if (strpos($cleanPhone, '0') === 0) {
+                            $cleanPhone = '62' . substr($cleanPhone, 1);
+                        }
+                    }
+                @endphp
+                
+                @if($cleanPhone)
+                <a href="https://wa.me/{{ $cleanPhone }}?text={{ $waText }}" target="_blank" class="inline-flex items-center gap-1.5 rounded-lg bg-green-500 hover:bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all active:scale-95" style="background-color: #25D366;">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    Share ke WA
+                </a>
+                @else
+                <a href="https://wa.me/?text={{ $waText }}" target="_blank" class="inline-flex items-center gap-1.5 rounded-lg bg-green-500 hover:bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all active:scale-95" style="background-color: #25D366;" title="Bagikan ke kontak (tanpa nomor spesifik)">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    Share via WA
+                </a>
+                @endif
+
+                <a href="{{ $signedInvoiceUrl }}" target="_blank" class="inline-flex items-center gap-1.5 rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-xs font-bold text-gray-700 shadow-sm hover:bg-gray-50 transition-colors dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    Lihat Invoice
                 </a>
                 <a href="{{ route('admin.orders.edit', $order->id) }}" class="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all active:scale-95">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>

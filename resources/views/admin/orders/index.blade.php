@@ -133,7 +133,27 @@
                                     <div class="font-medium text-gray-600 dark:text-gray-300">{{ $order->created_at->format('d M Y, H:i') }}</div>
                                     <div class="text-[10px] text-gray-400 mt-0.5">{{ $order->created_at->diffForHumans() }}</div>
                                 </td>
-                                <td class="relative whitespace-nowrap py-3 pl-3 pr-5 text-right text-xs font-semibold">
+                                <td class="relative whitespace-nowrap py-3 pl-3 pr-5 text-right text-xs font-semibold flex items-center justify-end gap-1.5">
+                                    @php
+                                        $signedInvoiceUrl = URL::signedRoute('invoice.show', $order->id);
+                                        $customerNameIndex = $order->user ? $order->user->name : ($order->customer_name ?? 'Pelanggan');
+                                        $waTextIndex = urlencode("Halo {$customerNameIndex}, terima kasih telah memesan di FoodieHub.\n\nBerikut adalah link invoice digital pesanan Anda:\n{$signedInvoiceUrl}\n\nHarap simpan link ini sebagai bukti pesanan Anda.");
+                                        
+                                        $cleanPhoneIndex = '';
+                                        if($order->phone) {
+                                            $cleanPhoneIndex = preg_replace('/[^0-9]/', '', $order->phone);
+                                            if (strpos($cleanPhoneIndex, '0') === 0) {
+                                                $cleanPhoneIndex = '62' . substr($cleanPhoneIndex, 1);
+                                            }
+                                        }
+                                    @endphp
+                                    
+                                    @if($cleanPhoneIndex)
+                                    <a href="https://wa.me/{{ $cleanPhoneIndex }}?text={{ $waTextIndex }}" target="_blank" class="inline-flex items-center p-1.5 rounded-lg text-white" style="background-color: #25D366;" title="Bagikan ke WhatsApp">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                                    </a>
+                                    @endif
+                                    
                                     <a href="{{ route('admin.orders.show', $order->id) }}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-[10px] font-bold text-orange-500 border border-orange-500 hover:bg-orange-500 hover:text-white transition-all shadow-sm">
                                         Detail
                                     </a>
