@@ -67,6 +67,7 @@ class OrderController extends Controller
             'delivery_date' => 'nullable|date',
             'payment_method' => 'required|in:transfer,cash',
             'payment_status' => 'required|in:unpaid,partial,paid',
+            'status' => 'required|in:pending,processing,completed,cancelled',
             'paid_amount' => 'nullable|numeric|min:0',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
@@ -104,7 +105,7 @@ class OrderController extends Controller
                 'delivery_date' => $request->delivery_date,
                 'payment_method' => $request->payment_method,
                 'total_price' => $totalPrice,
-                'status' => 'completed',
+                'status' => $request->status,
                 'payment_status' => $request->payment_status,
                 'paid_amount' => $paidAmount,
             ]);
@@ -127,7 +128,7 @@ class OrderController extends Controller
                 'order_id' => $order->id,
                 'user_id' => auth()->id(),
                 'status_from' => 'pending',
-                'status_to' => 'completed',
+                'status_to' => $request->status,
             ]);
 
             \Illuminate\Support\Facades\DB::commit();

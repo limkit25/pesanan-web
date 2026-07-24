@@ -62,21 +62,57 @@
                                 <input type="text" id="customer_name" name="customer_name" value="{{ old('customer_name') }}" :required="customerType === 'guest'" placeholder="Contoh: Budi, Meja 5, dsb." class="block w-full rounded-lg border-gray-300 bg-gray-50 py-2 px-3 text-xs font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
                             </div>
 
-                            <!-- Registered User Select -->
-                            <div x-show="customerType === 'registered'" style="display: none;">
-                                <label for="user_id" class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">Pilih Pelanggan <span class="text-red-500">*</span></label>
-                                <select id="user_id" name="user_id" :required="customerType === 'registered'" class="block w-full rounded-lg border-gray-300 bg-gray-50 py-2 pl-3 pr-8 text-xs font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
-                                    <option value="">-- Pilih Pelanggan --</option>
-                                    @foreach($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
-                                    @endforeach
-                                </select>
+                            <!-- Registered User Select (Searchable) -->
+                            <div x-show="customerType === 'registered'" style="display: none;" class="relative" x-data="{ 
+                                search: '', 
+                                open: false, 
+                                selectedUserId: '{{ old('user_id') }}',
+                                selectedUserName: '{{ old('user_id') ? collect($users)->firstWhere('id', old('user_id'))?->name ?? '' : '' }}',
+                                users: @js($users->map(fn($u) => ['id' => $u->id, 'name' => $u->name, 'email' => $u->email]))
+                            }">
+                                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">Pilih Pelanggan <span class="text-red-500">*</span></label>
+                                
+                                <input type="hidden" name="user_id" x-model="selectedUserId" :required="customerType === 'registered'">
+                                
+                                <div @click.away="open = false" class="relative">
+                                    <div @click="open = true" class="block w-full rounded-lg border border-gray-300 bg-gray-50 py-1.5 px-3 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500/20 dark:border-gray-800 dark:bg-gray-900 cursor-text flex items-center justify-between transition-all">
+                                        <input type="text" 
+                                               x-model="search" 
+                                               @focus="open = true" 
+                                               :placeholder="selectedUserName ? selectedUserName : 'Ketik nama / email...'" 
+                                               class="bg-transparent border-none p-0 focus:ring-0 text-xs w-full font-semibold text-gray-900 dark:text-white placeholder-gray-500" 
+                                               @input="selectedUserId = ''; selectedUserName = ''">
+                                        <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </div>
+                                    
+                                    <div x-show="open" x-transition class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700 max-h-56 overflow-y-auto">
+                                        <template x-for="user in users.filter(u => u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()))" :key="user.id">
+                                            <div @click="selectedUserId = user.id; selectedUserName = user.name; search = ''; open = false" class="px-3 py-2 cursor-pointer hover:bg-orange-50 dark:hover:bg-gray-700 border-b border-gray-50 dark:border-gray-700/50 last:border-0 transition-colors">
+                                                <div class="text-xs font-bold text-gray-900 dark:text-white" x-text="user.name"></div>
+                                                <div class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5" x-text="user.email"></div>
+                                            </div>
+                                        </template>
+                                        <div x-show="users.filter(u => u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase())).length === 0" class="px-3 py-4 text-center text-xs text-gray-500">
+                                            Tidak ada pelanggan ditemukan
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Phone -->
                             <div>
                                 <label for="phone" class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">Nomor Telepon / WA</label>
                                 <input type="text" id="phone" name="phone" value="{{ old('phone') }}" placeholder="Opsional" class="block w-full rounded-lg border-gray-300 bg-gray-50 py-2 px-3 text-xs font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                            </div>
+
+                            <!-- Status Pesanan -->
+                            <div>
+                                <label for="status" class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">Status Pesanan</label>
+                                <select id="status" name="status" class="block w-full rounded-lg border-gray-300 bg-gray-50 py-2 pl-3 pr-8 text-xs font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                                    <option value="pending">Pending (Menunggu)</option>
+                                    <option value="processing">Diproses</option>
+                                    <option value="completed" selected>Selesai</option>
+                                </select>
                             </div>
 
                             <!-- Payment Method -->
