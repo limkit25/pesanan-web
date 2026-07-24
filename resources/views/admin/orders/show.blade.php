@@ -174,10 +174,16 @@
                             </div>
                             <div>
                                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Nama</p>
-                                <p class="text-xs font-bold text-gray-900 dark:text-white">{{ $order->user->name }}</p>
+                                <p class="text-xs font-bold text-gray-900 dark:text-white">
+                                    {{ $order->user ? $order->user->name : ($order->customer_name ?? 'Guest') }}
+                                    @if(!$order->user)
+                                        <span class="ml-1 inline-flex items-center rounded-full bg-gray-100 px-1.5 py-0.5 text-[8px] font-bold text-gray-500 dark:bg-gray-800 dark:text-gray-400">POS</span>
+                                    @endif
+                                </p>
                             </div>
                         </div>
 
+                        @if($order->user)
                         <div class="flex items-center gap-2.5">
                             <div class="w-7 h-7 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
@@ -187,6 +193,7 @@
                                 <p class="text-xs font-medium text-gray-600 dark:text-gray-300">{{ $order->user->email }}</p>
                             </div>
                         </div>
+                        @endif
 
                         @if($order->phone && auth()->user()->role === 'admin')
                         <div class="flex items-center gap-2.5">
@@ -242,7 +249,7 @@
                         Alamat / Meja
                     </h3>
                     <div class="rounded-lg bg-gray-50 dark:bg-gray-900/50 px-3 py-2.5 border border-gray-100 dark:border-gray-800">
-                        <p class="text-xs text-gray-700 dark:text-gray-200 whitespace-pre-wrap font-semibold leading-relaxed">{{ $order->shipping_address }}</p>
+                        <p class="text-xs text-gray-700 dark:text-gray-200 whitespace-pre-wrap font-semibold leading-relaxed">{{ $order->shipping_address ?? 'Tidak ada catatan alamat/meja' }}</p>
                     </div>
                 </div>
 

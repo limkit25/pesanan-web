@@ -41,6 +41,101 @@ class OrderController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
+    public function create()
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $products = \App\Models\Product::orderBy('name')->get();
+        return view('admin.orders.create', compact('products'));
+    }
+
+    public function store(Request $request)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $request->validate([
+            'customer_name' => 'required|string|max:100',
+            'phone' => 'nullable|string|max:30',
+            'shipping_address' => 'nullable|string|max:500',
+            'delivery_date' => 'nullable|date',
+            'payment_method' => 'required|in:transfer,cash',
+            'payment_status' => 'required|in:unpaid,partial,paid',
+            'paid_amount' => 'nullable|numeric|min:0',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            $totalPrice = 0;
+            
+            foreach ($request->items as $itemData) {
+                $product = \App\Models\Product::findOrFail($itemData['product_id']);
+                $totalPrice += $product->price * $itemData['quantity'];
+            }
+
+            $taxSetting = \App\Models\Setting::where('key', 'tax_enabled')->first();
+            $taxEnabled = $taxSetting ? $taxSetting->value == '1' : true;
+
+            if ($taxEnabled) {
+                $totalPrice = $totalPrice + ($totalPrice * 0.1);
+            }
+
+            $paidAmount = 0;
+            if ($request->payment_status === 'paid') {
+                $paidAmount = $totalPrice;
+            } elseif ($request->payment_status === 'partial') {
+                $paidAmount = $request->paid_amount ?? 0;
+            }
+
+            $order = Order::create([
+                'user_id' => null, 
+                'customer_name' => $request->customer_name,
+                'phone' => $request->phone,
+                'shipping_address' => $request->shipping_address,
+                'delivery_date' => $request->delivery_date,
+                'payment_method' => $request->payment_method,
+                'total_price' => $totalPrice,
+                'status' => 'completed',
+                'payment_status' => $request->payment_status,
+                'paid_amount' => $paidAmount,
+            ]);
+
+            foreach ($request->items as $itemData) {
+                $product = \App\Models\Product::findOrFail($itemData['product_id']);
+                
+                \App\Models\OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'price' => $product->price,
+                    'cost_price' => $product->cost_price ?? 0,
+                    'quantity' => $itemData['quantity'],
+                ]);
+
+                $product->decrement('stock', $itemData['quantity']);
+            }
+
+            \App\Models\OrderLog::create([
+                'order_id' => $order->id,
+                'user_id' => auth()->id(),
+                'status_from' => 'pending',
+                'status_to' => 'completed',
+            ]);
+
+            \Illuminate\Support\Facades\DB::commit();
+
+            return redirect()->route('admin.orders.index')->with('success', 'Pesanan manual berhasil dibuat.');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return back()->with('error', 'Gagal membuat pesanan: ' . $e->getMessage())->withInput();
+        }
+    }
+
     public function edit(Order $order)
     {
         if (auth()->user()->role !== 'admin') {

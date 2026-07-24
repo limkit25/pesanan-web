@@ -21,6 +21,12 @@
                     <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Batal</option>
                 </select>
             </form>
+            @if(auth()->user()->role === 'admin')
+            <a href="{{ route('admin.orders.create') }}" class="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gray-900 dark:bg-orange-500 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-gray-800 dark:hover:bg-orange-600 transition-all focus:ring-2 focus:ring-orange-500/20 active:scale-95">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                Buat Pesanan Baru (POS)
+            </a>
+            @endif
         </div>
     </div>
         
@@ -59,9 +65,15 @@
                                 <td class="whitespace-nowrap px-3 py-3 text-xs text-gray-600 dark:text-gray-300">
                                     <div class="flex items-center gap-2">
                                         <div class="h-6 w-6 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-[9px]">
-                                            {{ strtoupper(substr($order->user->name, 0, 2)) }}
+                                            @php
+                                                $name = $order->user ? $order->user->name : ($order->customer_name ?? 'Guest');
+                                                echo strtoupper(substr($name, 0, 2));
+                                            @endphp
                                         </div>
-                                        <span class="font-semibold">{{ $order->user->name }}</span>
+                                        <span class="font-semibold">{{ $name }}</span>
+                                        @if(!$order->user)
+                                            <span class="inline-flex items-center rounded-full bg-gray-100 px-1.5 py-0.5 text-[8px] font-bold text-gray-500 dark:bg-gray-800 dark:text-gray-400">POS</span>
+                                        @endif
                                     </div>
                                 </td>
                                 <td class="px-3 py-3 text-xs">
