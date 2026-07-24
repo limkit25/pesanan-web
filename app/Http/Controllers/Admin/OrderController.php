@@ -48,7 +48,7 @@ class OrderController extends Controller
         }
 
         $products = \App\Models\Product::orderBy('name')->get();
-        $users = \App\Models\User::where('role', 'user')->orderBy('name')->get();
+        $users = \App\Models\User::where('role', 'customer')->orderBy('name')->get();
         return view('admin.orders.create', compact('products', 'users'));
     }
 
