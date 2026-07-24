@@ -31,7 +31,18 @@ class OrderController extends Controller
                   ->whereRaw('total_price > paid_amount');
         }
 
-        $orders = $query->orderBy('created_at', 'desc')->paginate(10);
+        $sort = $request->get('sort', 'created_at');
+        $direction = $request->get('direction', 'desc');
+        
+        $allowedSorts = ['id', 'total_qty', 'total_price', 'payment_status', 'status', 'created_at'];
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'created_at';
+        }
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'desc';
+        }
+
+        $orders = $query->orderBy($sort, $direction)->paginate(10)->withQueryString();
         return view('admin.orders.index', compact('orders'));
     }
 
@@ -167,6 +178,7 @@ class OrderController extends Controller
         $rules = [
             'status' => 'required|in:pending,processing,completed,cancelled',
             'payment_status' => 'nullable|in:unpaid,verifying,partial,paid',
+            'payment_method' => 'nullable|in:cash,transfer',
             'paid_amount' => 'nullable|numeric|min:0',
             'payment_proof' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ];
@@ -200,6 +212,9 @@ class OrderController extends Controller
             }
             if ($request->hasFile('payment_proof')) {
                 $updateData['payment_proof'] = $request->file('payment_proof')->store('payments', 'public');
+            }
+            if ($request->has('payment_method')) {
+                $updateData['payment_method'] = $request->payment_method;
             }
             $order->update($updateData);
 
@@ -243,6 +258,9 @@ class OrderController extends Controller
                     $updateDataFull['paid_amount'] = $request->paid_amount ?? 0;
                 }
                 // Jika 'paid', kita update paid_amount nanti setelah total_price dihitung ulang
+            }
+            if ($request->has('payment_method')) {
+                $updateDataFull['payment_method'] = $request->payment_method;
             }
             if ($request->hasFile('payment_proof')) {
                 $updateDataFull['payment_proof'] = $request->file('payment_proof')->store('payments', 'public');

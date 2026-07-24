@@ -63,6 +63,15 @@
                                 </select>
                             </div>
 
+                            <!-- Payment Method -->
+                            <div>
+                                <label for="payment_method" class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">Metode Pembayaran</label>
+                                <select id="payment_method" name="payment_method" class="block w-full rounded-lg border-gray-300 bg-gray-50 py-2 pl-3 pr-8 text-xs font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                                    <option value="cash" {{ $order->payment_method === 'cash' ? 'selected' : '' }}>Bayar Tunai (Cash/Di Tempat)</option>
+                                    <option value="transfer" {{ $order->payment_method === 'transfer' ? 'selected' : '' }}>Transfer Bank</option>
+                                </select>
+                            </div>
+
                             <!-- Nominal Dibayar (Hanya Muncul Jika Partial) -->
                             <div x-show="paymentStatus === 'partial'" x-transition class="md:col-span-2">
                                 <label for="paid_amount" class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">Nominal yang Dibayar (Rp)</label>

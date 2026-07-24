@@ -39,18 +39,45 @@
 
         <div class="flow-root">
             <div class="overflow-x-auto bg-white shadow-theme-sm border border-gray-200 rounded-xl dark:bg-gray-dark dark:border-gray-800">
+                @php
+                    $sortUrl = function($column) {
+                        $direction = request('sort') === $column && request('direction') === 'asc' ? 'desc' : 'asc';
+                        return request()->fullUrlWithQuery(['sort' => $column, 'direction' => $direction]);
+                    };
+                    $sortIcon = function($column) {
+                        if (request('sort') !== $column && !(!request('sort') && $column === 'created_at')) {
+                            return '<svg class="w-3 h-3 text-gray-300 dark:text-gray-600 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>';
+                        }
+                        if (request('direction') === 'asc') {
+                            return '<svg class="w-3 h-3 text-orange-500 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>';
+                        }
+                        return '<svg class="w-3 h-3 text-orange-500 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>';
+                    };
+                @endphp
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
                     <thead class="bg-gray-50 dark:bg-gray-900/50">
                         <tr>
-                            <th scope="col" class="py-3 pl-5 pr-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">ID</th>
+                            <th scope="col" class="py-3 pl-5 pr-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                <a href="{{ $sortUrl('id') }}" class="flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200 group">ID {!! $sortIcon('id') !!}</a>
+                            </th>
                             <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Pelanggan</th>
-                            <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Jumlah (Qty)</th>
+                            <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                <a href="{{ $sortUrl('total_qty') }}" class="flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200 group">Jumlah (Qty) {!! $sortIcon('total_qty') !!}</a>
+                            </th>
                             @if(auth()->user()->role === 'admin')
-                            <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Total</th>
+                            <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                <a href="{{ $sortUrl('total_price') }}" class="flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200 group">Total {!! $sortIcon('total_price') !!}</a>
+                            </th>
                             @endif
-                            <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Pembayaran</th>
-                            <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Status</th>
-                            <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Waktu</th>
+                            <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                <a href="{{ $sortUrl('payment_status') }}" class="flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200 group">Pembayaran {!! $sortIcon('payment_status') !!}</a>
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                <a href="{{ $sortUrl('status') }}" class="flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200 group">Status {!! $sortIcon('status') !!}</a>
+                            </th>
+                            <th scope="col" class="px-3 py-3 text-left text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                <a href="{{ $sortUrl('created_at') }}" class="flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-200 group">Waktu {!! $sortIcon('created_at') !!}</a>
+                            </th>
                             <th scope="col" class="relative py-3 pl-3 pr-5 text-right">
                                 <span class="sr-only">Aksi</span>
                             </th>
