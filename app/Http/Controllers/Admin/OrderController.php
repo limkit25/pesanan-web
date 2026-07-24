@@ -48,7 +48,8 @@ class OrderController extends Controller
         }
 
         $products = \App\Models\Product::orderBy('name')->get();
-        return view('admin.orders.create', compact('products'));
+        $users = \App\Models\User::where('role', 'user')->orderBy('name')->get();
+        return view('admin.orders.create', compact('products', 'users'));
     }
 
     public function store(Request $request)
@@ -58,7 +59,9 @@ class OrderController extends Controller
         }
 
         $request->validate([
-            'customer_name' => 'required|string|max:100',
+            'customer_type' => 'required|in:guest,registered',
+            'user_id' => 'required_if:customer_type,registered|nullable|exists:users,id',
+            'customer_name' => 'required_if:customer_type,guest|nullable|string|max:100',
             'phone' => 'nullable|string|max:30',
             'shipping_address' => 'nullable|string|max:500',
             'delivery_date' => 'nullable|date',
@@ -94,8 +97,8 @@ class OrderController extends Controller
             }
 
             $order = Order::create([
-                'user_id' => null, 
-                'customer_name' => $request->customer_name,
+                'user_id' => $request->customer_type === 'registered' ? $request->user_id : null, 
+                'customer_name' => $request->customer_type === 'guest' ? $request->customer_name : null,
                 'phone' => $request->phone,
                 'shipping_address' => $request->shipping_address,
                 'delivery_date' => $request->delivery_date,

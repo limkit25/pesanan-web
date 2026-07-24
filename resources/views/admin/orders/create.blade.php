@@ -41,10 +41,36 @@
                         <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4 border-b border-gray-100 dark:border-gray-800 pb-2">Informasi Pesanan</h3>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Customer Name -->
-                            <div>
-                                <label for="customer_name" class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">Nama Pelanggan / Guest <span class="text-red-500">*</span></label>
-                                <input type="text" id="customer_name" name="customer_name" value="{{ old('customer_name') }}" required placeholder="Contoh: Budi, Meja 5, dsb." class="block w-full rounded-lg border-gray-300 bg-gray-50 py-2 px-3 text-xs font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                            <!-- Tipe Pelanggan -->
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">Tipe Pelanggan</label>
+                                <div class="flex gap-4">
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="customer_type" value="guest" x-model="customerType" class="text-orange-500 focus:ring-orange-500 dark:bg-gray-900 dark:border-gray-700">
+                                        <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">Pelanggan Baru (Guest)</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="customer_type" value="registered" x-model="customerType" class="text-orange-500 focus:ring-orange-500 dark:bg-gray-900 dark:border-gray-700">
+                                        <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">Pilih Pelanggan Terdaftar</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Customer Name (Guest) -->
+                            <div x-show="customerType === 'guest'">
+                                <label for="customer_name" class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">Nama Pelanggan (Guest) <span class="text-red-500">*</span></label>
+                                <input type="text" id="customer_name" name="customer_name" value="{{ old('customer_name') }}" :required="customerType === 'guest'" placeholder="Contoh: Budi, Meja 5, dsb." class="block w-full rounded-lg border-gray-300 bg-gray-50 py-2 px-3 text-xs font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                            </div>
+
+                            <!-- Registered User Select -->
+                            <div x-show="customerType === 'registered'" style="display: none;">
+                                <label for="user_id" class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1.5">Pilih Pelanggan <span class="text-red-500">*</span></label>
+                                <select id="user_id" name="user_id" :required="customerType === 'registered'" class="block w-full rounded-lg border-gray-300 bg-gray-50 py-2 pl-3 pr-8 text-xs font-semibold focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
+                                    <option value="">-- Pilih Pelanggan --</option>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <!-- Phone -->
@@ -227,6 +253,7 @@
             selectedProductId: '',
             taxEnabled: @json(\App\Models\Setting::where('key', 'tax_enabled')->first()?->value == '1'),
             paymentStatus: 'paid',
+            customerType: 'guest',
             
             get totalQty() {
                 return this.items.reduce((sum, item) => sum + item.quantity, 0);
