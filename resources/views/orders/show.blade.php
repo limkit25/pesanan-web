@@ -282,9 +282,9 @@
                         @if($order->payment_method === 'transfer')
                             @if($order->payment_proof)
                                 <div class="mt-3">
-                                    <p class="text-[10px] font-bold text-emerald-600 mb-2 flex items-center gap-1">
+                                    <p class="text-[10px] font-bold {{ $order->payment_status === 'verifying' ? 'text-blue-600' : 'text-emerald-600' }} mb-2 flex items-center gap-1">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                        Bukti Transfer Terkirim
+                                        {{ $order->payment_status === 'verifying' ? 'Bukti Sedang Diverifikasi Admin' : 'Bukti Transfer Dikonfirmasi' }}
                                     </p>
                                     <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="block overflow-hidden rounded-xl border border-gray-200">
                                         <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Bukti Transfer" class="w-full h-32 object-cover hover:scale-105 transition-transform duration-300">

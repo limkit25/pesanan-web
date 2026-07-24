@@ -67,7 +67,7 @@ class OrderController extends Controller
     {
         $rules = [
             'status' => 'required|in:pending,processing,completed,cancelled',
-            'payment_status' => 'nullable|in:unpaid,partial,paid',
+            'payment_status' => 'nullable|in:unpaid,verifying,partial,paid',
             'paid_amount' => 'nullable|numeric|min:0',
             'payment_proof' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ];

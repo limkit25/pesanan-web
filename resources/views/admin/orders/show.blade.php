@@ -77,7 +77,7 @@
                 <!-- Update Status Control -->
                 <!-- Update Status Control -->
                 <div class="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm dark:border-gray-800 dark:bg-gray-dark" x-data="{ paymentStatus: '{{ $order->payment_status }}' }">
-                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Update Status Pesanan & Pembayaran</h3>
+                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">{{ auth()->user()->role === 'admin' ? 'Update Status Pesanan & Pembayaran' : 'Update Status Pesanan' }}</h3>
                     <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-3">
                         @csrf
                         @method('PATCH')
@@ -91,15 +91,19 @@
                                     <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                                 </select>
                             </div>
+                            @if(auth()->user()->role === 'admin')
                             <div class="flex-1">
                                 <label for="payment_status" class="block text-[10px] font-bold text-gray-400 mb-1">Status Pembayaran</label>
                                 <select id="payment_status" name="payment_status" x-model="paymentStatus" class="block w-full rounded-lg border-gray-200 bg-gray-50 py-2 pl-3 pr-8 text-xs font-semibold focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
                                     <option value="unpaid">Belum Lunas</option>
+                                    <option value="verifying">Menunggu Verifikasi</option>
                                     <option value="partial">Sebagian (DP)</option>
                                     <option value="paid">Lunas</option>
                                 </select>
                             </div>
+                            @endif
                         </div>
+                        @if(auth()->user()->role === 'admin')
                         <div x-show="paymentStatus === 'partial'" x-transition class="w-full">
                             <label for="paid_amount" class="block text-[10px] font-bold text-gray-400 mb-1">Nominal yang Dibayar (Rp)</label>
                             <input type="number" id="paid_amount" name="paid_amount" value="{{ (int)$order->paid_amount }}" placeholder="Contoh: 50000" class="block w-full rounded-lg border-gray-200 bg-gray-50 py-2 px-3 text-xs font-semibold focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white">
@@ -114,6 +118,7 @@
                                 <p class="text-rose-500 text-[10px] mt-1">{{ $message }}</p>
                             @enderror
                         </div>
+                        @endif
                         @endif
                         <div class="flex justify-end">
                             <button type="submit" class="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-bold px-4 py-2 rounded-lg shadow-sm active:scale-95 transition-all text-xs flex items-center gap-1.5 whitespace-nowrap">

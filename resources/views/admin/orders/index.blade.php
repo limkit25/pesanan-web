@@ -80,6 +80,10 @@
                                         <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400" title="Rp {{ number_format($order->paid_amount, 0, ',', '.') }}">
                                             Lunas
                                         </span>
+                                    @elseif($order->payment_status === 'verifying')
+                                        <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-600 dark:bg-blue-500/10 dark:text-blue-400" title="Menunggu verifikasi admin">
+                                            Cek Bukti
+                                        </span>
                                     @elseif($order->payment_status === 'partial')
                                         <span class="inline-flex items-center gap-1 rounded-full bg-yellow-50 px-2 py-1 text-[10px] font-bold text-yellow-600 dark:bg-yellow-500/10 dark:text-yellow-400" title="Rp {{ number_format($order->paid_amount, 0, ',', '.') }}">
                                             DP / Sebagian

@@ -55,7 +55,10 @@ class OrderController extends Controller
 
         if ($request->hasFile('payment_proof')) {
             $path = $request->file('payment_proof')->store('payments', 'public');
-            $order->update(['payment_proof' => $path]);
+            $order->update([
+                'payment_proof' => $path,
+                'payment_status' => 'verifying'
+            ]);
             return back()->with('success', 'Bukti transfer berhasil diunggah! Mohon tunggu konfirmasi dari admin.');
         }
 
